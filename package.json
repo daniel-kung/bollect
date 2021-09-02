@@ -80,10 +80,10 @@
     ]
   },
   "scripts": {
-    "start": "env-cmd -f .env.smartchain react-scripts start",
-    "start:smartchain-test": "env-cmd -f .env.smartchain-test react-scripts start",
-    "build": "env-cmd -f .env.smartchain react-scripts build",
-    "build-stage": "env-cmd -f .env.smartchain-test react-scripts build",
+    "start": "env-cmd -f .env.solana react-scripts start",
+    "start-test": "set PORT=8000 && env-cmd -f .env.solana-test react-scripts start",
+    "build": "env-cmd -f .env.solana react-scripts build",
+    "build-stage": "env-cmd -f .env.solana-test react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
