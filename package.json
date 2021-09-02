@@ -1,5 +1,5 @@
 {
-  "name": "fangible",
+  "name": "bollect",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -85,8 +85,10 @@
     ]
   },
   "scripts": {
-    "start": "env-cmd -f .env.dev react-scripts start",
-    "build": "env-cmd -f .env react-scripts build",
+    "start-prod": "env-cmd -f .env.solana react-scripts start",
+    "start": "set PORT=8000 && env-cmd -f .env.solana-test react-scripts start",
+    "build": "env-cmd -f .env.solana react-scripts build",
+    "build-stage": "env-cmd -f .env.solana-test react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",

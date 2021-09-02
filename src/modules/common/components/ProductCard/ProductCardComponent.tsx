@@ -33,7 +33,6 @@ import CardPutSaleTimer from './putsaleTimer';
 import { useProductCardStyles } from './useProductCardStyles';
 import { useEffect } from 'react';
 import { useCount } from 'modules/common/hooks/useTimer';
-import { ChainSymbolIcon } from '../Icons/Chains';
 import { formatUnitNumber } from 'modules/common/utils/number';
 
 export type ProductCardCategoryType = 'image' | 'video';
@@ -137,7 +136,7 @@ export const ProductCardComponent = ({
   isTotalSupply,
   reload,
 }: IProductCardComponentProps) => {
-  const { isConnected, handleConnect, chainId } = useAccount();
+  const { isConnected, handleConnect } = useAccount();
   const classes = useProductCardStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const isPopoverOpened = Boolean(anchorEl);
@@ -358,20 +357,6 @@ export const ProductCardComponent = ({
     !isPutSaleTimeCancel && isOnSeller && !isCreatorClaimed && !isAuction,
   );
 
-  const RenderChiaIcon = ({ className }: { className?: string }) => {
-    return (
-      <ChainSymbolIcon
-        display="flex"
-        alignItems="center"
-        className={classes.topChiaIcon}
-        chiaId={chainId}
-      >
-        {({ symbolName }) => {
-          return <span className={classes.topChiaText}>{symbolName}</span>;
-        }}
-      </ChainSymbolIcon>
-    );
-  };
   return (
     <Card className={classNames(classes.root, className)} variant="outlined">
       <Box
@@ -379,7 +364,7 @@ export const ProductCardComponent = ({
         justifyContent="space-between"
         className={classes.topBar}
       >
-        <RenderChiaIcon />
+        <div></div>
         {renderedLikes}
       </Box>
       <div className={classes.relative}>

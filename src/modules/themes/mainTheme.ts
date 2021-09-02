@@ -426,7 +426,7 @@ export const mainTheme = createMuiTheme({
 
         '&:before': {
           background:
-            'linear-gradient(360deg, #FFD18B 0%, rgba(255, 0, 0, 0) 50%), linear-gradient(259.57deg, #2663FF 1.58%, #FF3828 92.54%)',
+            ' linear-gradient(249.51deg, #00FFA3 -47.16%, #DC1FFF 140.55%)',
         },
 
         '&:hover': {
