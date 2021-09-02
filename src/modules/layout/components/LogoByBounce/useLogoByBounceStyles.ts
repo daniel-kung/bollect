@@ -12,6 +12,6 @@ export const useLogoByBounceStyles = makeStyles<Theme>(theme => ({
 
   img: {
     display: 'block',
-    height: 43,
+    height: 25,
   },
 }));
