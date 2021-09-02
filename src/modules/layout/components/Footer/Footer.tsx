@@ -143,9 +143,7 @@ export const Footer = () => {
             <LocaleSwitcher />
           </Grid>
         </Grid>
-        <p className={classes.description}>
-          Non-fungible tokens + Fans = Bollect
-        </p>
+        <p className={classes.description}>Bounce + Collect = Bollect</p>
       </Container>
     </footer>
   );
