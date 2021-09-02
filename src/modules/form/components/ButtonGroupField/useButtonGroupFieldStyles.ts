@@ -1,4 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core';
+import { PALETTE } from 'modules/themes/mainTheme';
 
 export const useButtonGroupFieldStyles = makeStyles<Theme>(theme => ({
   root: {
@@ -24,8 +25,10 @@ export const useButtonGroupFieldStyles = makeStyles<Theme>(theme => ({
   },
 
   btnActive: {
-    background: theme.palette.text.primary,
+    background: PALETTE.primaryLinearColor,
     color: theme.palette.background.default,
+    outline: 'none',
+    borderWidth: 0,
     cursor: 'default',
 
     '&:before': {
@@ -37,7 +40,7 @@ export const useButtonGroupFieldStyles = makeStyles<Theme>(theme => ({
     },
 
     '&:hover': {
-      background: theme.palette.text.primary,
+      background: PALETTE.primaryLinearColor,
       color: theme.palette.background.default,
     },
   },
