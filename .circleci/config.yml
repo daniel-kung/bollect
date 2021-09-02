@@ -1,148 +1,148 @@
-version: 2.1
+# version: 2.1
 
-build-template: &build-template
-  docker:
-    - image: ankrnetwork/bounceimg:v0.0.6
-  steps:
-    - checkout
-    - setup_remote_docker
-    - run:
-        name: Output env info
-        command: node --version && yarn --version
-    - run:
-        name: Pull dependencies
-        command: yarn
-    - run:
-        no_output_timeout: 10m
-        name: Building ...
-        command: |
-          if [[ "$ENVIRONMENT" == "stage" ]]; then
-            yarn build-stage
-          else
-            yarn build
-          fi
-    - persist_to_workspace:
-        root: '.'
-        paths:
-          - '.'
+# build-template: &build-template
+#   docker:
+#     - image: ankrnetwork/bounceimg:v0.0.6
+#   steps:
+#     - checkout
+#     - setup_remote_docker
+#     - run:
+#         name: Output env info
+#         command: node --version && yarn --version
+#     - run:
+#         name: Pull dependencies
+#         command: yarn
+#     - run:
+#         no_output_timeout: 10m
+#         name: Building ...
+#         command: |
+#           if [[ "$ENVIRONMENT" == "stage" ]]; then
+#             yarn build-stage
+#           else
+#             yarn build
+#           fi
+#     - persist_to_workspace:
+#         root: '.'
+#         paths:
+#           - '.'
 
-upload-template: &upload-template
-  docker:
-    - image: bigbadalien/awscli-node-kops-kubectl:0.3
-  steps:
-    - setup_remote_docker
-    - attach_workspace:
-        at: '.'
-    - run:
-        name: Upload artifacts
-        command: aws s3 cp ./build s3://$DOMAIN_MARKET/ --acl bucket-owner-full-control --recursive --cache-control "public,max-age=600,s-maxage=3600"
-    - run:
-        name: Cloudfront invalidation
-        command: aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID_MARKET --paths '/*'
+# upload-template: &upload-template
+#   docker:
+#     - image: bigbadalien/awscli-node-kops-kubectl:0.3
+#   steps:
+#     - setup_remote_docker
+#     - attach_workspace:
+#         at: '.'
+#     - run:
+#         name: Upload artifacts
+#         command: aws s3 cp ./build s3://$DOMAIN_MARKET/ --acl bucket-owner-full-control --recursive --cache-control "public,max-age=600,s-maxage=3600"
+#     - run:
+#         name: Cloudfront invalidation
+#         command: aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID_MARKET --paths '/*'
 
-jobs:
-  # build
-  build-stage:
-    <<: *build-template
-  build-bounce-stage:
-    <<: *build-template
-  build-prod:
-    <<: *build-template
-  build-bs-1-stage:
-    <<: *build-template
-  build-bs-2-stage:
-    <<: *build-template
-  # upload
-  upload-stage:
-    <<: *upload-template
-  upload-bounce-stage:
-    <<: *upload-template
-  upload-prod:
-    <<: *upload-template
-  upload-bs-1-stage:
-    <<: *upload-template
-  upload-bs-2-stage:
-    <<: *upload-template
+# jobs:
+#   # build
+#   build-stage:
+#     <<: *build-template
+#   build-bounce-stage:
+#     <<: *build-template
+#   build-prod:
+#     <<: *build-template
+#   build-bs-1-stage:
+#     <<: *build-template
+#   build-bs-2-stage:
+#     <<: *build-template
+#   # upload
+#   upload-stage:
+#     <<: *upload-template
+#   upload-bounce-stage:
+#     <<: *upload-template
+#   upload-prod:
+#     <<: *upload-template
+#   upload-bs-1-stage:
+#     <<: *upload-template
+#   upload-bs-2-stage:
+#     <<: *upload-template
 
-workflows:
-  version: 2.1
-  bounce_market:
-    jobs:
-      # market-stage.bounce.finance
-      - approve-bounce-stage:
-          type: approval
-          filters:
-            branches:
-              only: [stage]
-      - build-bounce-stage:
-          context:
-            - bounce_build_stage
-          requires:
-            - approve-bounce-stage
-      - upload-bounce-stage:
-          context:
-            - cicd
-            - bounce_build_stage
-          requires:
-            - build-bounce-stage
-      # stage.fangible.com
-      - approve-stage:
-          type: approval
-          filters:
-            branches:
-              only: [stage]
-      - build-stage:
-          context:
-            - fangible_build_stage
-          requires:
-            - approve-stage
-      - upload-stage:
-          context:
-            - cicd
-            - fangible_build_stage
-          requires:
-            - build-stage
-      # prod
-      - approve-prod:
-          type: approval
-          filters:
-            branches:
-              only: [master, stage]
-      - build-prod:
-          context: bounce_build_prod
-          requires:
-            - approve-prod
-      - upload-prod:
-          context:
-            - cicd
-            - bounce_build_prod
-          requires:
-            - build-prod
-      # bs-1-stage.fangible.com
-      - approve-bs-1-stage:
-          type: approval
-      - build-bs-1-stage:
-          context:
-            - fangible_build_stage
-          requires:
-            - approve-bs-1-stage
-      - upload-bs-1-stage:
-          context:
-            - cicd
-            - fangible_deploy_bs_1_stage
-          requires:
-            - build-bs-1-stage
-      # bs-2-stage.fangible.com
-      - approve-bs-2-stage:
-          type: approval
-      - build-bs-2-stage:
-          context:
-            - fangible_build_stage
-          requires:
-            - approve-bs-2-stage
-      - upload-bs-2-stage:
-          context:
-            - cicd
-            - fangible_deploy_bs_2_stage
-          requires:
-            - build-bs-2-stage
+# workflows:
+#   version: 2.1
+#   bounce_market:
+#     jobs:
+#       # market-stage.bounce.finance
+#       - approve-bounce-stage:
+#           type: approval
+#           filters:
+#             branches:
+#               only: [stage]
+#       - build-bounce-stage:
+#           context:
+#             - bounce_build_stage
+#           requires:
+#             - approve-bounce-stage
+#       - upload-bounce-stage:
+#           context:
+#             - cicd
+#             - bounce_build_stage
+#           requires:
+#             - build-bounce-stage
+#       # stage.fangible.com
+#       - approve-stage:
+#           type: approval
+#           filters:
+#             branches:
+#               only: [stage]
+#       - build-stage:
+#           context:
+#             - fangible_build_stage
+#           requires:
+#             - approve-stage
+#       - upload-stage:
+#           context:
+#             - cicd
+#             - fangible_build_stage
+#           requires:
+#             - build-stage
+#       # prod
+#       - approve-prod:
+#           type: approval
+#           filters:
+#             branches:
+#               only: [master, stage]
+#       - build-prod:
+#           context: bounce_build_prod
+#           requires:
+#             - approve-prod
+#       - upload-prod:
+#           context:
+#             - cicd
+#             - bounce_build_prod
+#           requires:
+#             - build-prod
+#       # bs-1-stage.fangible.com
+#       - approve-bs-1-stage:
+#           type: approval
+#       - build-bs-1-stage:
+#           context:
+#             - fangible_build_stage
+#           requires:
+#             - approve-bs-1-stage
+#       - upload-bs-1-stage:
+#           context:
+#             - cicd
+#             - fangible_deploy_bs_1_stage
+#           requires:
+#             - build-bs-1-stage
+#       # bs-2-stage.fangible.com
+#       - approve-bs-2-stage:
+#           type: approval
+#       - build-bs-2-stage:
+#           context:
+#             - fangible_build_stage
+#           requires:
+#             - approve-bs-2-stage
+#       - upload-bs-2-stage:
+#           context:
+#             - cicd
+#             - fangible_deploy_bs_2_stage
+#           requires:
+#             - build-bs-2-stage

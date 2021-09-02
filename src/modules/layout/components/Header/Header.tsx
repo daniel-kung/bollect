@@ -43,6 +43,7 @@ export const Header = () => {
   } = useHeader();
 
   const { isConnected, handleConnect, loading, chainId } = useAccount();
+
   const classes = useHeaderStyles();
   const isXLUp = useIsXLUp();
 
