@@ -144,7 +144,7 @@ export const Footer = () => {
           </Grid>
         </Grid>
         <p className={classes.description}>
-          Non-fungible tokens + Fans = Fangible
+          Non-fungible tokens + Fans = Bollect
         </p>
       </Container>
     </footer>
