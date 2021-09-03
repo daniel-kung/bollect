@@ -14,6 +14,7 @@ import { historyInstance } from '../../../common/utils/historyInstance';
 import { locales } from '../../../i18n';
 import { useLocale } from '../../../i18n/utils/useLocale';
 import { mainTheme } from '../../../themes/mainTheme';
+import { SolanaWalletProvider } from './SolanaWalletProvider';
 
 interface IAppBaseProps {
   children: ReactNode;
@@ -41,17 +42,22 @@ export const AppBase = ({ children }: IAppBaseProps) => {
   }, [locale]);
 
   return (
-    <MuiThemeProvider theme={mainTheme}>
-      <CssBaseline />
-      <Web3ModalStyles />
+    <SolanaWalletProvider>
+      <MuiThemeProvider theme={mainTheme}>
+        <CssBaseline />
+        <Web3ModalStyles />
 
-      {!initDone || loading ? (
-        <QueryLoadingAbsolute />
-      ) : (
-        <ConnectedRouter history={historyInstance} context={ReactReduxContext}>
-          {children}
-        </ConnectedRouter>
-      )}
-    </MuiThemeProvider>
+        {!initDone || loading ? (
+          <QueryLoadingAbsolute />
+        ) : (
+          <ConnectedRouter
+            history={historyInstance}
+            context={ReactReduxContext}
+          >
+            {children}
+          </ConnectedRouter>
+        )}
+      </MuiThemeProvider>
+    </SolanaWalletProvider>
   );
 };

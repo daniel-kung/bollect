@@ -28,7 +28,8 @@ import {
   SelectChainDialog,
   useDialogState,
 } from './components/SelectChainDialog';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { WalletModal } from '../ConnectWallet';
 
 export const Header = () => {
   const {
@@ -43,6 +44,7 @@ export const Header = () => {
   } = useHeader();
 
   const { isConnected, handleConnect, loading, chainId } = useAccount();
+  const [isConnectWalletOpen, setIsConnectWalletOpen] = useState(false);
 
   const classes = useHeaderStyles();
   const isXLUp = useIsXLUp();
@@ -89,10 +91,26 @@ export const Header = () => {
       </Button>
 
       {!isConnected && (
-        <Button onClick={handleConnect} loading={loading} rounded>
-          {t('header.connect')}
-        </Button>
+        <>
+          <Button
+            onClick={() => {
+              setIsConnectWalletOpen(true);
+            }}
+            loading={loading}
+            rounded
+          >
+            {t('header.connect')}
+          </Button>
+
+          <WalletModal
+            isOpen={isConnectWalletOpen}
+            onClose={() => {
+              setIsConnectWalletOpen(false);
+            }}
+          />
+        </>
       )}
+
       {isConnected && (
         <div>
           <Button
