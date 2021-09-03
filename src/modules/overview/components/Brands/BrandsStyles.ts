@@ -1,8 +1,9 @@
 import { makeStyles, Theme } from '@material-ui/core';
+import { PALETTE } from 'modules/themes/mainTheme';
 
 export const useBrandsStyles = makeStyles<Theme>(theme => ({
   root: {
-    backgroundColor: '#110E12',
+    background: PALETTE.primaryLinearColor,
   },
 
   moreBtn: {
