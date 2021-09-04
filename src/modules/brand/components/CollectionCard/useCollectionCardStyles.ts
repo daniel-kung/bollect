@@ -50,9 +50,6 @@ export const useCollectionCardStyles = makeStyles<Theme>(theme => ({
     display: 'flex',
     alignItems: 'center',
     marginRight: 40,
-    '& > span': {
-      marginLeft: 12,
-    },
   },
   showRoyalty: {
     display: 'flex',

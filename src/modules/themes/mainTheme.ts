@@ -25,6 +25,8 @@ export const PALETTE = {
     main: '#0075FF',
     dark: darken('#0075FF', 0.2),
   },
+  primaryLinearColor:
+    'linear-gradient(249.51deg, #00FFA3 -47.16%, #DC1FFF 140.55%)',
   background: {
     default: '#fff',
     paper: '#fff',
@@ -344,9 +346,8 @@ export const mainTheme = createMuiTheme({
       },
 
       contained: {
-        backgroundColor: defaultTheme.palette.common.black,
+        background: PALETTE.primaryLinearColor,
         overflow: 'hidden',
-        border: `1px solid ${defaultTheme.palette.common.black}`,
         transition: `color ${BTN_TRANSITION_TIME}s ease-in, border ${BTN_TRANSITION_TIME}s ease-in`,
         color: defaultTheme.palette.common.white,
 
@@ -365,6 +366,7 @@ export const mainTheme = createMuiTheme({
         },
 
         '&:hover': {
+          border: `1px solid`,
           color: defaultTheme.palette.common.black,
           backgroundColor: defaultTheme.palette.common.black,
           borderColor: fade(defaultTheme.palette.common.black, 0),
@@ -404,7 +406,7 @@ export const mainTheme = createMuiTheme({
           bottom: -1,
           width: 'auto',
           height: 'auto',
-          background: defaultTheme.palette.text.primary,
+          background: PALETTE.primaryLinearColor,
           transition: `transform ${BTN_TRANSITION_TIME}s cubic-bezier(0.7, 0, 0.2, 1)`,
           transform: 'translateY(100%)',
         },
@@ -425,8 +427,7 @@ export const mainTheme = createMuiTheme({
         border: `1px solid ${defaultTheme.palette.common.black}`,
 
         '&:before': {
-          background:
-            ' linear-gradient(249.51deg, #00FFA3 -47.16%, #DC1FFF 140.55%)',
+          background: PALETTE.primaryLinearColor,
         },
 
         '&:hover': {
@@ -469,6 +470,11 @@ export const mainTheme = createMuiTheme({
     MuiTabs: {
       root: {
         minHeight: 40,
+        '@global': {
+          '.MuiTabs-indicator': {
+            background: PALETTE.primaryLinearColor,
+          },
+        },
       },
 
       indicator: {
@@ -599,6 +605,16 @@ export const mainTheme = createMuiTheme({
       },
     },
 
+    MuiPagination: {
+      ul: {
+        '@global': {
+          '.Mui-selected': {
+            background: PALETTE.primaryLinearColor,
+            borderWidth: 0,
+          },
+        },
+      },
+    },
     MuiSwitch: {
       root: {
         width: 60,
@@ -618,6 +634,11 @@ export const mainTheme = createMuiTheme({
 
         '&&$checked': {
           transform: 'translateX(28px)',
+          '@global': {
+            '.MuiSwitch-thumb': {
+              background: PALETTE.primaryLinearColor,
+            },
+          },
         },
       },
 

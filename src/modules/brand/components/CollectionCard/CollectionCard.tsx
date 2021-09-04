@@ -3,10 +3,8 @@ import { useInView } from 'react-intersection-observer';
 import { Link } from 'react-router-dom';
 import { useCollectionCardStyles } from './useCollectionCardStyles';
 import { ReactComponent as DollerIcon } from '../assets/doller.svg';
-import { ReactNode } from 'react';
 import BigNumber from 'bignumber.js';
 import { NftType } from 'modules/api/common/NftType';
-import { ChainSymbolIcon } from 'modules/common/components/Icons/Chains';
 
 interface IBrandsItemProps {
   img?: string;
@@ -40,10 +38,6 @@ export const CollectionCard = ({
     triggerOnce: true,
   });
 
-  const getIconByChainId: (chainId: number) => ReactNode = chainId => {
-    return <ChainSymbolIcon chiaId={chainId} />;
-  };
-
   return (
     <Paper className={classes.root} variant="outlined" ref={ref}>
       <Grid className={classes.row} container spacing={4} alignItems="center">
@@ -60,7 +54,6 @@ export const CollectionCard = ({
 
           <div className={classes.optionBtn}>
             <div className={classes.showStandard}>
-              {getIconByChainId(chainId)}
               <span>{nftType === NftType.ERC721 ? 'ERC-721' : 'ERC-1155'}</span>
             </div>
             <div className={classes.showRoyalty}>
