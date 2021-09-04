@@ -13,7 +13,7 @@ import {
   Transaction,
   TransactionSignature,
 } from '@solana/web3.js';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import bs58 from 'bs58';
 
@@ -93,7 +93,9 @@ export const WalletModal = ({ isOpen, onClose }: IBurnTokenDialogProps) => {
       const rawTransaction = signTrans.serialize();
       signature = await connection.sendRawTransaction(rawTransaction);
       console.log('signature', signature);
-      await connection.confirmTransaction(signature, 'processed');
+      await connection.confirmTransaction(signature, 'processed').then(res => {
+        // 加载loading
+      });
     } catch (error: any) {
       console.error(error);
       return;
