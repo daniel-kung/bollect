@@ -11,6 +11,7 @@ export const useReactWeb3 = () => {
   const isConnected = Boolean(_isConnected && getJWTToken());
 
   const disconnect = useCallback(() => {
+    localStorage.clear();
     return adapter?.disconnect?.();
   }, [adapter]);
   const connect = useCallback(
@@ -18,25 +19,22 @@ export const useReactWeb3 = () => {
       new Promise((resolve, reject) => {
         const connect = () => {
           if (_isConnected || address) {
-            console.log('--address resolve--');
             return resolve(name);
           }
           let isResolve = false;
           try {
+            // TODO sollet adapter null of first
             adapter?.connect().finally(() => {
-              console.log('adapter connect');
               resolve(name);
               isResolve = true;
             });
           } catch (error) {
             console.log('uninstall');
-            // console.log(error)
+            reject(error);
           }
-          // Phantom connect timeout -> auto resolve
-          // if (name !== WalletName.Phantom) {
-          //   return;
-          // }
-          setTimeout(() => !isResolve && resolve(name), 600);
+          if (adapter) {
+            setTimeout(() => !isResolve && resolve(name), 600);
+          }
         };
         select(name);
         connect();

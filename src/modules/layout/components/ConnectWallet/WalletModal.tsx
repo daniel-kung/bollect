@@ -8,6 +8,9 @@ import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
 import { mobileWallets, wallets } from './wallets';
 import { setJWTToken } from 'modules/common/utils/localStorage';
 import { useIsXLUp } from 'modules/themes/useTheme';
+import { NotificationActions } from 'modules/notification/store/NotificationActions';
+import { extractMessage } from 'modules/common/utils/extractError';
+import { useDispatch } from 'react-redux';
 
 export interface IBurnFormValues {
   royaltyRate: string;
@@ -22,18 +25,31 @@ export const WalletModal = ({ isOpen, onClose }: IBurnTokenDialogProps) => {
   const classes = useWalletModalStyles();
   const { connect } = useReactWeb3();
   const isXLUp = useIsXLUp();
+  const dispatch = useDispatch();
 
   const handelConnect = (walletName: WalletName) => {
     connect(walletName)?.then(async () => {
-      const message = `Bollect`;
-      const encodedMessage = new TextEncoder().encode(message);
-      const signedMessage = await (window as any)?.solana?.signMessage(
-        encodedMessage,
-        'utf8',
-      );
-      const signature = bs58.encode(signedMessage.signature);
-      setJWTToken(signature);
-      onClose();
+      try {
+        const message = `Bollect`;
+        const encodedMessage = new TextEncoder().encode(message);
+        const signedMessage = await (window as any)?.solana?.signMessage(
+          encodedMessage,
+          'utf8',
+        );
+        const signature = bs58.encode(signedMessage.signature);
+        setJWTToken(signature);
+        onClose();
+      } catch (error: any) {
+        console.log(error);
+        dispatch(
+          NotificationActions.showNotification({
+            message: extractMessage(
+              new Error(error?.message ?? 'signature error'),
+            ),
+            severity: 'error',
+          }),
+        );
+      }
     });
   };
 
