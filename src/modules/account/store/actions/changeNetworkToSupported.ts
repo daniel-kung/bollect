@@ -44,7 +44,7 @@ export const changeNetworkToSupported = createSmartAction(
                     );
                     window.location.reload();
                   });
-              } catch (switchError) {
+              } catch (switchError: any) {
                 // This error code indicates that the chain has not been added to MetaMask.
                 if (switchError.code === 4902) {
                   try {

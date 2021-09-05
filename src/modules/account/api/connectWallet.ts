@@ -1,7 +1,7 @@
 import Web3Modal, { IProviderOptions } from 'web3modal';
 import { PALETTE } from '../../themes/mainTheme';
 import { fade, lighten } from '@material-ui/core';
-import WalletConnectProvider from '@walletconnect/web3-provider';
+// import WalletConnectProvider from '@walletconnect/web3-provider';
 import binanceWalletLogo from '../assets/binanceWallet.svg';
 import { BscConnector } from '@binance-chain/bsc-connector';
 import Web3 from 'web3';
@@ -38,7 +38,7 @@ export async function connectWallet(cacheProvider?: boolean) {
         }
       : {}),
     walletconnect: {
-      package: WalletConnectProvider,
+      package: {},
       options: {
         rpc: RPC,
       },

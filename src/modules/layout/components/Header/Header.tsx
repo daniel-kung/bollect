@@ -24,12 +24,9 @@ import { Toggle } from '../Toggle';
 import { Wallet } from '../Wallet';
 import { useHeaderStyles } from './HeaderStyles';
 import { useHeader } from './useHeader';
-import {
-  SelectChainDialog,
-  useDialogState,
-} from './components/SelectChainDialog';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { WalletModal } from '../ConnectWallet';
+import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
 
 export const Header = () => {
   const {
@@ -43,34 +40,13 @@ export const Header = () => {
     searchShowed,
   } = useHeader();
 
-  const { isConnected, handleConnect, loading, chainId } = useAccount();
+  const { loading } = useAccount();
+
+  const { isConnected } = useReactWeb3();
   const [isConnectWalletOpen, setIsConnectWalletOpen] = useState(false);
 
   const classes = useHeaderStyles();
   const isXLUp = useIsXLUp();
-
-  const {
-    opened: openedSelectChainDialog,
-    open: openSelectChainDialog,
-    close: closeSelectChainDialog,
-  } = useDialogState();
-
-  const mapChainIdName = useCallback(() => {
-    switch (chainId) {
-      case 1:
-        return t('header.network.etherreum');
-      case 4:
-        return t('header.network.rinkby');
-      case 56:
-        return t('header.network.binance');
-      case 128:
-        return t('header.network.heco');
-      case 137:
-        return t('header.network.polygon');
-      default:
-        return t('header.network.unknow');
-    }
-  }, [chainId]);
 
   const renderedWallet = <Wallet />;
 
@@ -102,33 +78,18 @@ export const Header = () => {
             {t('header.connect')}
           </Button>
 
-          <WalletModal
-            isOpen={isConnectWalletOpen}
-            onClose={() => {
-              setIsConnectWalletOpen(false);
-            }}
-          />
+          <ThemeProvider theme={getTheme(Themes.light)}>
+            <WalletModal
+              isOpen={isConnectWalletOpen}
+              onClose={() => {
+                setIsConnectWalletOpen(false);
+              }}
+            />
+          </ThemeProvider>
         </>
       )}
 
-      {isConnected && (
-        <div>
-          <Button
-            onClick={openSelectChainDialog}
-            loading={loading}
-            rounded
-            className={classes.btnChangeNet}
-          >
-            {mapChainIdName()}
-          </Button>
-          <SelectChainDialog
-            isOpen={openedSelectChainDialog}
-            onClose={closeSelectChainDialog}
-            currentChain={chainId}
-          />
-          {renderedWallet}
-        </div>
-      )}
+      {isConnected && <div>{renderedWallet}</div>}
     </>
   );
 
@@ -202,38 +163,31 @@ export const Header = () => {
                     </Button>
                   </Box>
 
-                  <Box mt="auto" mb={3}>
-                    <Button
-                      onClick={openSelectChainDialog}
-                      loading={loading}
-                      rounded
-                      className={classes.btnChangeNet}
-                      fullWidth
-                    >
-                      {mapChainIdName()}
-                    </Button>
-                  </Box>
-
                   {!isConnected && (
-                    <Button
-                      onClick={handleConnect}
-                      loading={loading}
-                      fullWidth
-                      rounded
-                    >
-                      {t('header.connect')}
-                    </Button>
+                    <>
+                      <Button
+                        onClick={() => {
+                          setIsConnectWalletOpen(true);
+                        }}
+                        loading={loading}
+                        fullWidth
+                        rounded
+                      >
+                        {t('header.connect')}
+                      </Button>
+
+                      <WalletModal
+                        isOpen={isConnectWalletOpen}
+                        onClose={() => {
+                          setIsConnectWalletOpen(false);
+                        }}
+                      />
+                    </>
                   )}
 
                   {isConnected && renderedWallet}
 
                   <Social mt={5} />
-
-                  <SelectChainDialog
-                    currentChain={chainId}
-                    isOpen={openedSelectChainDialog}
-                    onClose={closeSelectChainDialog}
-                  />
                 </Container>
               </Drawer>
             </ThemeProvider>

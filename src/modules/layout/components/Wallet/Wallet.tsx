@@ -15,6 +15,7 @@ import { useWalletDropdown } from './useWalletDropdown';
 import { useWalletStyles } from './useWalletStyles';
 import { getNativeTokenSymbol } from '../../../common/conts';
 import { useWeb3Balance } from 'modules/account/hooks/useWeb3React';
+import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
 
 interface IWalletProps {
   address?: string;
@@ -36,12 +37,8 @@ export const WalletComponent = ({
   const { chainId } = useAccount();
   const currency = getNativeTokenSymbol(chainId);
 
-  const {
-    isOpened,
-    handleDisconnect,
-    handleClose,
-    handleOpen,
-  } = useWalletDropdown();
+  const { isOpened, handleDisconnect, handleClose, handleOpen } =
+    useWalletDropdown();
 
   const controlRef = useRef<HTMLButtonElement>(null);
 
@@ -96,6 +93,7 @@ export const WalletComponent = ({
             logo={logo}
             balance={balance}
             handleClose={handleClose}
+            handleDisconnect={handleDisconnect}
           />
         </>
       )}
@@ -104,7 +102,7 @@ export const WalletComponent = ({
 };
 
 export const Wallet = () => {
-  const { address } = useAccount();
+  const { address } = useReactWeb3();
 
   const { data } = useQuery<IProfileInfo | null>({
     type: fetchProfileInfo.toString(),

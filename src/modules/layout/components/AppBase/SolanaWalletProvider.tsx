@@ -7,23 +7,33 @@ import {
 import { clusterApiUrl } from '@solana/web3.js';
 import {
   getPhantomWallet,
-  getSolflareWallet,
-  getSolletWallet,
+  // getSolletWallet,
+  // getSolongWallet,
+  getMathWallet,
 } from '@solana/wallet-adapter-wallets';
+import { useIsXLUp } from 'modules/themes/useTheme';
 
 export const SolanaWalletProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [autoConnect] = useLocalStorage('autoConnect', true);
-  const endpoint = useMemo(() => clusterApiUrl('devnet'), []);
+  const endpoint = useMemo(() => clusterApiUrl('mainnet-beta'), []);
+  const isXLUp = useIsXLUp();
 
   const wallets = useMemo(
-    () => [getPhantomWallet(), getSolflareWallet(), getSolletWallet()],
-    [],
+    () =>
+      isXLUp
+        ? [
+            getPhantomWallet(),
+            // getSolletWallet(),
+            // getSolongWallet(),
+          ]
+        : [getPhantomWallet(), getMathWallet()],
+    [isXLUp],
   );
 
   const onError = (err: any) => {
-    console.error(err);
+    console.log(err);
   };
 
   return (

@@ -1,18 +1,14 @@
-import { resetRequests } from '@redux-requests/core';
 import { useQuery } from '@redux-requests/react';
-import { getJWTToken } from 'modules/common/utils/localStorage';
 import { IAddEthereumChain } from 'modules/layout/components/Header/components/SelectChainDialog';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useAppDispatch } from 'store/useAppDispatch';
 import { BlockchainNetworkId } from '../../common/conts';
 import { changeNetworkToSupported } from '../store/actions/changeNetworkToSupported';
 import { connect } from '../store/actions/connect';
 import { ISetAccountData, setAccount } from '../store/actions/setAccount';
 import { updateAccount } from '../store/actions/updateAccount';
-import { useWeb3React } from './useWeb3React';
 
-let run = false;
-let initRemoteDataRun = false;
+// TODO eth to Solana
 export const useAccount = () => {
   const dispatch = useAppDispatch();
 
@@ -24,34 +20,8 @@ export const useAccount = () => {
     type: setAccount.toString(),
   });
 
-  const web3Data = useWeb3React();
-  const token = getJWTToken() ?? '';
-
-  if (!web3Data.loading && !data && token && !run) {
-    run = true;
-    dispatch(
-      setAccount({
-        token,
-        ...web3Data,
-      }),
-    );
-  }
-  useEffect(() => {
-    return () => {
-      resetRequests([setAccount.toString()]);
-    };
-  }, []);
-
   const address = data?.address;
   const isConnected = !!address;
-
-  if (!initRemoteDataRun && web3Data?.address && isConnected) {
-    initRemoteDataRun = true;
-    dispatch({
-      type: connect().type,
-      payload: web3Data,
-    });
-  }
 
   const chainId = parseInt((data?.chainId ?? 0).toString());
 
@@ -83,7 +53,7 @@ export const useAccount = () => {
   );
 
   const connectLoading = !Boolean(
-    setAccountLoading === false && web3Data.loading === false,
+    setAccountLoading === false, //&& web3Data.loading === false,
   );
   return {
     loading: connectLoading,

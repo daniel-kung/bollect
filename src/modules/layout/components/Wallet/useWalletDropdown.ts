@@ -1,11 +1,10 @@
+import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
 import { useLayout } from 'modules/layout/hooks/useLayout';
 import { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { disconnect } from '../../../account/store/actions/disconnect';
 
 export function useWalletDropdown() {
   const [isOpen, setOpen] = useState(false);
-  const dispatch = useDispatch();
+  const { disconnect } = useReactWeb3();
   const { toggleNav, mobileNavShowed } = useLayout();
 
   const handleClose = useCallback(() => {
@@ -23,9 +22,11 @@ export function useWalletDropdown() {
   }, []);
 
   const handleDisconnect = useCallback(() => {
-    dispatch(disconnect());
-    setOpen(false);
-  }, [dispatch]);
+    disconnect()?.finally(() => {
+      localStorage.clear();
+      setOpen(false);
+    });
+  }, [disconnect]);
 
   return {
     isOpened: isOpen,
