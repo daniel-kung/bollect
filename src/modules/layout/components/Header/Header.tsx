@@ -24,9 +24,11 @@ import { Toggle } from '../Toggle';
 import { Wallet } from '../Wallet';
 import { useHeaderStyles } from './HeaderStyles';
 import { useHeader } from './useHeader';
-import { useState } from 'react';
 import { WalletModal } from '../ConnectWallet';
 import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
+import { updateShowWalletLogin } from 'modules/common/store/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'store';
 
 export const Header = () => {
   const {
@@ -43,7 +45,13 @@ export const Header = () => {
   const { loading } = useAccount();
 
   const { isConnected } = useReactWeb3();
-  const [isConnectWalletOpen, setIsConnectWalletOpen] = useState(false);
+  const dispatch = useDispatch();
+  const { showWalletLogin: isConnectWalletOpen } = useSelector(
+    (state: RootState) => state.user,
+  );
+  const setIsConnectWalletOpen = (open: boolean) => {
+    dispatch(updateShowWalletLogin(open));
+  };
 
   const classes = useHeaderStyles();
   const isXLUp = useIsXLUp();

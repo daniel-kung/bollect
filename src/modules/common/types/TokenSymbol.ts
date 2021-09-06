@@ -8,6 +8,7 @@ export enum TokenSymbol {
   BTC = 'BTC',
   HT = 'HT',
   MATIC = 'MATIC',
+  SOLANA = 'SOL',
 }
 
 export enum ChainSymbol {
@@ -15,4 +16,5 @@ export enum ChainSymbol {
   ETH = 'ETH',
   HECO = 'HECO',
   Polygon = 'POLYGON',
+  SOLANA = 'SOL',
 }

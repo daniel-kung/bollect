@@ -23,7 +23,6 @@ export const useReactWeb3 = () => {
           }
           let isResolve = false;
           try {
-            // TODO sollet adapter null of first
             adapter?.connect().finally(() => {
               resolve(name);
               isResolve = true;

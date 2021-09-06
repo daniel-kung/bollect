@@ -1,10 +1,6 @@
-import { DispatchRequest, getQuery, RequestAction } from '@redux-requests/core';
+import { DispatchRequest, RequestAction } from '@redux-requests/core';
 import { Store } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
-import {
-  ISetAccountData,
-  setAccount,
-} from 'modules/account/store/actions/setAccount';
 import { AuctionState } from 'modules/api/common/AuctionState';
 import { AuctionType } from 'modules/api/common/auctionType';
 import { FixedSwapState } from 'modules/api/common/FixedSwapState';
@@ -78,11 +74,12 @@ export const queryLikedItems = createSmartAction<
       _action: RequestAction,
       store: Store<RootState> & { dispatchRequest: DispatchRequest },
     ) => {
-      const { data } = getQuery<ISetAccountData>(store.getState(), {
-        type: setAccount.toString(),
-      });
+      const state: RootState = store.getState();
+      const address = state.user.address;
+      console.log('---getaccountlike---');
+      console.log(address);
 
-      request.data = { accountaddress: data?.address };
+      request.data = { accountaddress: address };
 
       return request;
     },

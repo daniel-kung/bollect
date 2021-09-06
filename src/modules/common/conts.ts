@@ -70,6 +70,7 @@ export enum BlockchainNetworkId {
   smartchainTestnet = 97,
   heco = 128,
   matic = 137,
+  solana = 123,
 }
 
 const NativeTokens: {
@@ -87,6 +88,7 @@ const NativeTokens: {
   [BlockchainNetworkId.smartchainTestnet]: TokenSymbol.BNB,
   [BlockchainNetworkId.heco]: TokenSymbol.HT,
   [BlockchainNetworkId.matic]: TokenSymbol.MATIC,
+  [BlockchainNetworkId.solana]: TokenSymbol.SOLANA,
 };
 
 const ChainsInfo = {
@@ -102,6 +104,7 @@ const ChainsInfo = {
   [BlockchainNetworkId.smartchainTestnet]: { chainSymbolName: ChainSymbol.BSC },
   [BlockchainNetworkId.heco]: { chainSymbolName: ChainSymbol.HECO },
   [BlockchainNetworkId.matic]: { chainSymbolName: ChainSymbol.Polygon },
+  [BlockchainNetworkId.solana]: { chainSymbolName: ChainSymbol.SOLANA },
 };
 
 export function getChainSymbol(chainId: BlockchainNetworkId) {
@@ -127,6 +130,7 @@ const BlockChainExplorerAddress: {
   [BlockchainNetworkId.smartchainTestnet]: 'https://bscscan.com/',
   [BlockchainNetworkId.heco]: 'https://hecoinfo.com/',
   [BlockchainNetworkId.matic]: 'https://polygonscan.com/',
+  [BlockchainNetworkId.solana]: 'https://explorer.solana.com/',
 };
 
 export const getBlockChainExplorerAddress = (chainId: BlockchainNetworkId) =>
@@ -147,6 +151,7 @@ const BlockChainExplorerName: {
   [BlockchainNetworkId.smartchainTestnet]: 'BSCScan',
   [BlockchainNetworkId.heco]: 'HecoScan',
   [BlockchainNetworkId.matic]: 'PolygonScan',
+  [BlockchainNetworkId.solana]: 'SolanaScan',
 };
 
 export const getBlockChainExplorerName = (chainId: BlockchainNetworkId) =>
@@ -167,6 +172,7 @@ const BlockChainTokenSymbol: {
   [BlockchainNetworkId.smartchainTestnet]: TokenSymbol.BNB,
   [BlockchainNetworkId.heco]: TokenSymbol.HT,
   [BlockchainNetworkId.matic]: TokenSymbol.MATIC,
+  [BlockchainNetworkId.solana]: TokenSymbol.SOLANA,
 };
 
 export const DefaultTokenSymbol = TokenSymbol.BNB;

@@ -4,10 +4,14 @@ type userColorMapType = { [key in string]: number };
 
 export interface IUserState {
   colors: userColorMapType;
+  showWalletLogin: boolean;
+  address: string;
 }
 
 const initialState: IUserState = {
   colors: {},
+  showWalletLogin: false,
+  address: '',
 };
 
 interface IColor {
@@ -27,12 +31,19 @@ export const userSlice = createSlice({
         [colorInfo.userName]: colorInfo.randomColor,
       };
     },
+    updateShowWalletLogin: (state, action: PayloadAction<boolean>) => {
+      state.showWalletLogin = action.payload;
+    },
+    updateAddress: (state, action: PayloadAction<string>) => {
+      state.address = action.payload;
+    },
   },
 });
-const { updateUserColorMap } = userSlice.actions;
 
-export const addUserColorDataAsync = (color: IColor) => async (
-  dispatch: any,
-) => {
-  dispatch(updateUserColorMap(color));
-};
+export const { updateUserColorMap, updateShowWalletLogin, updateAddress } =
+  userSlice.actions;
+
+export const addUserColorDataAsync =
+  (color: IColor) => async (dispatch: any) => {
+    dispatch(updateUserColorMap(color));
+  };

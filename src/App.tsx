@@ -1,5 +1,6 @@
 import { NoSsr } from '@material-ui/core';
 import { ScrollToTop } from 'modules/common/components/ScrollToTop';
+import { Update } from 'modules/layout/components/Update/update';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -14,11 +15,13 @@ function App() {
     <Provider store={store}>
       <PersistGate loading={<QueryLoadingAbsolute />} persistor={persistor}>
         <AppBase>
-          <ScrollToTop />
-          <Routes />
-          <NoSsr>
-            <Notifications />
-          </NoSsr>
+          <Update>
+            <ScrollToTop />
+            <Routes />
+            <NoSsr>
+              <Notifications />
+            </NoSsr>
+          </Update>
         </AppBase>
       </PersistGate>
     </Provider>

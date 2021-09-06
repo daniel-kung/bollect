@@ -55,6 +55,8 @@ const chainToMainApiDriver: {
   [BlockchainNetworkId.smartchainTestnet]: undefined,
   [BlockchainNetworkId.heco]: 'mainApiHeco',
   [BlockchainNetworkId.matic]: 'mainApiMatic',
+  // TODO
+  [BlockchainNetworkId.solana]: 'mainApiSmartchain',
 };
 
 function getMainApiDriverName(chainId: BlockchainNetworkId): MainApiDriverName {
@@ -83,6 +85,8 @@ const chainNftViewApiDriver: {
   [BlockchainNetworkId.smartchainTestnet]: undefined,
   [BlockchainNetworkId.heco]: 'nftViewApiHeco',
   [BlockchainNetworkId.matic]: 'nftViewApiMatic',
+  // TODO
+  [BlockchainNetworkId.solana]: 'nftViewApiSmartchain',
 };
 
 function getNftViewApiDriverName(
@@ -110,6 +114,7 @@ const chainNftView2ApiDriver: {
   [BlockchainNetworkId.mordor]: undefined,
   [BlockchainNetworkId.kotti]: undefined,
   [BlockchainNetworkId.smartchain]: 'nftView2ApiSmartchain',
+  [BlockchainNetworkId.solana]: 'nftView2ApiSmartchain',
   [BlockchainNetworkId.smartchainTestnet]: undefined,
   [BlockchainNetworkId.heco]: 'nftView2ApiHeco',
   [BlockchainNetworkId.matic]: 'nftView2ApiMatic',

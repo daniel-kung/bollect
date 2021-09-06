@@ -5,6 +5,7 @@ import { BscScanIcon } from 'modules/buyNFT/components/ScanBtn/assets/BscScanIco
 import { ETHScanIcon } from 'modules/buyNFT/components/ScanBtn/assets/ETHScanIcon';
 import { HTScanIcon } from 'modules/buyNFT/components/ScanBtn/assets/HTScanIcon';
 import { MaticScanIcon } from 'modules/buyNFT/components/ScanBtn/assets/MaticScanIcon';
+import { SOLScanIcon } from 'modules/buyNFT/components/ScanBtn/assets/SOlScanIcon';
 import {
   BlockchainNetworkId,
   DefaultChainId,
@@ -37,6 +38,7 @@ export const ChainsIcon: React.FC<{
     [BlockchainNetworkId.smartchainTestnet]: BscScanIcon,
     [BlockchainNetworkId.heco]: HTScanIcon,
     [BlockchainNetworkId.matic]: MaticScanIcon,
+    [BlockchainNetworkId.solana]: SOLScanIcon,
   };
   const Render = chainsIcon[chiaId as BlockchainNetworkId];
   return Render ? (

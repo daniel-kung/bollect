@@ -31,6 +31,7 @@ const chaiToBrandUri: {
   [BlockchainNetworkId.smartchain]: process.env.REACT_APP_BRAND_BASEURI,
   [BlockchainNetworkId.smartchainTestnet]: undefined,
   [BlockchainNetworkId.heco]: process.env.REACT_APP_BRAND_BASEURI_HECO,
+  [BlockchainNetworkId.solana]: 'solana',
   [BlockchainNetworkId.matic]:
     process.env.REACT_APP_BRAND_CONTRACT_ADDRESS_V2_MATIC,
 };
