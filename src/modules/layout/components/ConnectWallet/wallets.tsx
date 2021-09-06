@@ -1,8 +1,8 @@
 import { makeStyles, Theme } from '@material-ui/core';
 import classNames from 'classnames';
 import phantomIcon from './asstes/img/phantom.png';
-import soLongIcon from './asstes/img/solong.png';
-import solletIcon from './asstes/img/sollet.svg';
+// import soLongIcon from './asstes/img/solong.png';
+// import solletIcon from './asstes/img/sollet.svg';
 import mathIcon from './asstes/img/math.svg';
 import { WalletName } from '@solana/wallet-adapter-wallets';
 
@@ -33,14 +33,14 @@ export const wallets = [
     walletLabel: WalletName.Phantom,
     startIcon: <Icon alt={WalletName.Phantom} src={phantomIcon} />,
   },
-  {
-    walletLabel: WalletName.Sollet,
-    startIcon: <Icon alt={WalletName.Sollet} src={solletIcon} />,
-  },
-  {
-    walletLabel: WalletName.Solong,
-    startIcon: <Icon alt={WalletName.Solong} src={soLongIcon} />,
-  },
+  // {
+  //   walletLabel: WalletName.Sollet,
+  //   startIcon: <Icon alt={WalletName.Sollet} src={solletIcon} />,
+  // },
+  // {
+  //   walletLabel: WalletName.Solong,
+  //   startIcon: <Icon alt={WalletName.Solong} src={soLongIcon} />,
+  // },
 ];
 
 export const mobileWallets = [

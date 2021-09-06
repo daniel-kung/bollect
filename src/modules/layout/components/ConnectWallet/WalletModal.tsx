@@ -11,7 +11,7 @@ import { useIsXLUp } from 'modules/themes/useTheme';
 import { NotificationActions } from 'modules/notification/store/NotificationActions';
 import { extractMessage } from 'modules/common/utils/extractError';
 import { useDispatch } from 'react-redux';
-import { queryLikedItems } from 'modules/profile/actions/queryLikedItems';
+// import { queryLikedItems } from 'modules/profile/actions/queryLikedItems';
 
 export interface IBurnFormValues {
   royaltyRate: string;
@@ -40,9 +40,9 @@ export const WalletModal = ({ isOpen, onClose }: IBurnTokenDialogProps) => {
         const signature = bs58.encode(signedMessage.signature);
         setJWTToken(signature);
         onClose();
-        setTimeout(() => {
-          dispatch(queryLikedItems());
-        }, 500);
+        // setTimeout(() => {
+        //   dispatch(queryLikedItems());
+        // }, 500);
       } catch (error: any) {
         console.log(error);
         dispatch(
