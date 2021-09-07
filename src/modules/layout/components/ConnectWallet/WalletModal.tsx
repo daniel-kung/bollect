@@ -3,15 +3,10 @@ import { CloseIcon } from 'modules/common/components/Icons/CloseIcon';
 import { useWalletModalStyles } from './useWalletModalStyles';
 import WalletItem from './WalletItem';
 import { WalletName } from '@solana/wallet-adapter-wallets';
-import bs58 from 'bs58';
 import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
 import { mobileWallets, wallets } from './wallets';
-import { setJWTToken } from 'modules/common/utils/localStorage';
 import { useIsXLUp } from 'modules/themes/useTheme';
-import { NotificationActions } from 'modules/notification/store/NotificationActions';
-import { extractMessage } from 'modules/common/utils/extractError';
-import { useDispatch } from 'react-redux';
-// import { queryLikedItems } from 'modules/profile/actions/queryLikedItems';
+import { useLogin } from 'modules/layout/hooks/useLogin';
 
 export interface IBurnFormValues {
   royaltyRate: string;
@@ -26,34 +21,11 @@ export const WalletModal = ({ isOpen, onClose }: IBurnTokenDialogProps) => {
   const classes = useWalletModalStyles();
   const { connect } = useReactWeb3();
   const isXLUp = useIsXLUp();
-  const dispatch = useDispatch();
+  const { login } = useLogin();
 
   const handelConnect = (walletName: WalletName) => {
-    connect(walletName)?.then(async () => {
-      try {
-        const message = `Bollect`;
-        const encodedMessage = new TextEncoder().encode(message);
-        const signedMessage = await (window as any)?.solana?.signMessage(
-          encodedMessage,
-          'utf8',
-        );
-        const signature = bs58.encode(signedMessage.signature);
-        setJWTToken(signature);
-        onClose();
-        // setTimeout(() => {
-        //   dispatch(queryLikedItems());
-        // }, 500);
-      } catch (error: any) {
-        console.log(error);
-        dispatch(
-          NotificationActions.showNotification({
-            message: extractMessage(
-              new Error(error?.message ?? 'signature error'),
-            ),
-            severity: 'error',
-          }),
-        );
-      }
+    connect(walletName)?.then(() => {
+      login(onClose);
     });
   };
 

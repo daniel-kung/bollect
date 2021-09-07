@@ -1,10 +1,5 @@
 import { createDriver as createAxiosDriver } from '@redux-requests/axios';
-import {
-  abortRequests,
-  Driver,
-  getQuery,
-  handleRequests,
-} from '@redux-requests/core';
+import { abortRequests, Driver, handleRequests } from '@redux-requests/core';
 import { createDriver } from '@redux-requests/promise';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import axios from 'axios';
@@ -13,7 +8,6 @@ import { i18nSlice } from 'modules/i18n/i18nSlice';
 import { LAYOUT_STATE_NAME, layoutReducer } from 'modules/layout/store/layout';
 import { persistReducer, persistStore } from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
-import { setAccount } from '../modules/account/store/actions/setAccount';
 import { extractMessage } from '../modules/common/utils/extractError';
 import { historyInstance } from '../modules/common/utils/historyInstance';
 import { NotificationActions } from '../modules/notification/store/NotificationActions';
@@ -29,9 +23,8 @@ import { Address } from '../modules/common/types/unit';
 import { TokenSymbol } from '../modules/common/types/TokenSymbol';
 import { disconnect } from 'modules/account/store/actions/disconnect';
 import { likeSlice } from 'modules/common/store/like';
-import { getChainId } from 'modules/common/utils/localStorage';
+import { getJWTToken } from 'modules/common/utils/localStorage';
 import { userSlice } from 'modules/common/store/user';
-import { getNotWeb3WalletInfo } from 'modules/account/hooks/useWeb3React';
 
 type MainApiDriverName =
   | 'mainApiEthMainnet'
@@ -259,14 +252,7 @@ const { requestsReducer, requestsMiddleware } = handleRequests({
     ),
   },
   onRequest: (request, action, store) => {
-    const rootState: RootState = store.getState();
-
-    const { data } = getQuery(rootState, {
-      type: setAccount.toString(),
-      action: setAccount,
-    });
-
-    const chainId = (data ?? getNotWeb3WalletInfo())?.chainId ?? getChainId();
+    const chainId = BlockchainNetworkId.solana;
     if (action.meta?.driver === 'axios') {
       action.meta = {
         ...action.meta,
@@ -291,7 +277,7 @@ const { requestsReducer, requestsMiddleware } = handleRequests({
         ...request,
         headers: {
           ...request.headers,
-          token: data?.token ?? '',
+          token: getJWTToken(),
         },
       };
     }

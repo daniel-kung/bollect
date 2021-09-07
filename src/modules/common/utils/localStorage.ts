@@ -14,5 +14,5 @@ export const getChainId = () => {
   return localStorage.chainId
     ? // TODO chainId may invalid
       parseInt(localStorage.chainId, 10)
-    : BlockchainNetworkId.smartchain;
+    : BlockchainNetworkId.solana;
 };
