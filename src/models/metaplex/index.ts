@@ -9,7 +9,6 @@ import {
   Vault,
   Metadata,
   MasterEditionV1,
-  MetadataKey,
   SafetyDepositBox,
   MasterEditionV2,
   toPublicKey,
@@ -36,6 +35,59 @@ export * from './deprecatedValidateSafetyDepositBoxV1';
 export * from './redeemParticipationBidV3';
 export * from './redeemPrintingV2Bid';
 export * from './withdrawMasterEdition';
+
+export enum AuctionManagerStatus {
+  Initialized,
+  Validated,
+  Running,
+  Disbursing,
+  Finished,
+}
+
+export enum TupleNumericType {
+  U8 = 1,
+  U16 = 2,
+  U32 = 4,
+  U64 = 8,
+}
+
+export enum WinningConstraint {
+  NoParticipationPrize = 0,
+  ParticipationPrizeGiven = 1,
+}
+
+export enum NonWinningConstraint {
+  NoParticipationPrize = 0,
+  GivenForFixedPrice = 1,
+  GivenForBidPrice = 2,
+}
+
+export enum WinningConfigType {
+  /// You may be selling your one-of-a-kind NFT for the first time, but not it's accompanying Metadata,
+  /// of which you would like to retain ownership. You get 100% of the payment the first sale, then
+  /// royalties forever after.
+  ///
+  /// You may be re-selling something like a Limited/Open Edition print from another auction,
+  /// a master edition record token by itself (Without accompanying metadata/printing ownership), etc.
+  /// This means artists will get royalty fees according to the top level royalty % on the metadata
+  /// split according to their percentages of contribution.
+  ///
+  /// No metadata ownership is transferred in this instruction, which means while you may be transferring
+  /// the token for a limited/open edition away, you would still be (nominally) the owner of the limited edition
+  /// metadata, though it confers no rights or privileges of any kind.
+  TokenOnlyTransfer,
+  /// Means you are auctioning off the master edition record and it's metadata ownership as well as the
+  /// token itself. The other person will be able to mint authorization tokens and make changes to the
+  /// artwork.
+  FullRightsTransfer,
+  /// Means you are using authorization tokens to print off editions during the auction using
+  /// from a MasterEditionV1
+  PrintingV1,
+  /// Means you are using the MasterEditionV2 to print off editions
+  PrintingV2,
+  /// Means you are using a MasterEditionV2 as a participation prize.
+  Participation,
+}
 
 export const METAPLEX_PREFIX = 'metaplex';
 export const TOTALS = 'totals';
@@ -114,7 +166,7 @@ export class AuctionManager {
     this.instance = args.instance;
     this.numWinners = args.auction.info.bidState.max;
     this.safetyDepositBoxesExpected =
-      this.instance.info.key == MetaplexKey.AuctionManagerV2
+      this.instance.info.key === MetaplexKey.AuctionManagerV2
         ? new BN(args.vault.info.tokenTypeCount)
         : new BN(
             (
@@ -130,7 +182,7 @@ export class AuctionManager {
     this.safetyDepositConfigs = args.safetyDepositConfigs;
     this.bidRedemptions = args.bidRedemptions;
     this.participationConfig =
-      this.instance.info.key == MetaplexKey.AuctionManagerV2
+      this.instance.info.key === MetaplexKey.AuctionManagerV2
         ? this.safetyDepositConfigs
             ?.filter(s => s.info.participationConfig)
             .map(s => ({
@@ -148,11 +200,11 @@ export class AuctionManager {
   }
 
   isItemClaimed(winnerIndex: number, safetyDepositBoxIndex: number): boolean {
-    if (this.instance.info.key == MetaplexKey.AuctionManagerV1) {
+    if (this.instance.info.key === MetaplexKey.AuctionManagerV1) {
       const asV1 = this.instance.info as AuctionManagerV1;
       const itemIndex = asV1.settings.winningConfigs[
         winnerIndex
-      ].items.findIndex(i => i.safetyDepositBoxIndex == safetyDepositBoxIndex);
+      ].items.findIndex(i => i.safetyDepositBoxIndex === safetyDepositBoxIndex);
 
       return asV1.state.winningConfigStates[winnerIndex].items[itemIndex]
         .claimed;
@@ -169,11 +221,11 @@ export class AuctionManager {
   }
 
   getAmountForWinner(winnerIndex: number, safetyDepositBoxIndex: number): BN {
-    if (this.instance.info.key == MetaplexKey.AuctionManagerV1) {
+    if (this.instance.info.key === MetaplexKey.AuctionManagerV1) {
       return new BN(
         (this.instance.info as AuctionManagerV1).settings.winningConfigs[
           winnerIndex
-        ].items.find(i => i.safetyDepositBoxIndex == safetyDepositBoxIndex)
+        ].items.find(i => i.safetyDepositBoxIndex === safetyDepositBoxIndex)
           ?.amount || 0,
       );
     } else {
@@ -196,7 +248,7 @@ export class AuctionManager {
     >,
     boxes: ParsedAccount<SafetyDepositBox>[],
   ): AuctionViewItem[][] {
-    if (this.instance.info.key == MetaplexKey.AuctionManagerV1) {
+    if (this.instance.info.key === MetaplexKey.AuctionManagerV1) {
       return (
         this.instance.info as AuctionManagerV1
       ).settings.winningConfigs.map(w => {
@@ -396,44 +448,6 @@ export class RedeemParticipationBidV3Args {
   }
 }
 
-export enum WinningConstraint {
-  NoParticipationPrize = 0,
-  ParticipationPrizeGiven = 1,
-}
-
-export enum NonWinningConstraint {
-  NoParticipationPrize = 0,
-  GivenForFixedPrice = 1,
-  GivenForBidPrice = 2,
-}
-
-export enum WinningConfigType {
-  /// You may be selling your one-of-a-kind NFT for the first time, but not it's accompanying Metadata,
-  /// of which you would like to retain ownership. You get 100% of the payment the first sale, then
-  /// royalties forever after.
-  ///
-  /// You may be re-selling something like a Limited/Open Edition print from another auction,
-  /// a master edition record token by itself (Without accompanying metadata/printing ownership), etc.
-  /// This means artists will get royalty fees according to the top level royalty % on the metadata
-  /// split according to their percentages of contribution.
-  ///
-  /// No metadata ownership is transferred in this instruction, which means while you may be transferring
-  /// the token for a limited/open edition away, you would still be (nominally) the owner of the limited edition
-  /// metadata, though it confers no rights or privileges of any kind.
-  TokenOnlyTransfer,
-  /// Means you are auctioning off the master edition record and it's metadata ownership as well as the
-  /// token itself. The other person will be able to mint authorization tokens and make changes to the
-  /// artwork.
-  FullRightsTransfer,
-  /// Means you are using authorization tokens to print off editions during the auction using
-  /// from a MasterEditionV1
-  PrintingV1,
-  /// Means you are using the MasterEditionV2 to print off editions
-  PrintingV2,
-  /// Means you are using a MasterEditionV2 as a participation prize.
-  Participation,
-}
-
 export const decodePrizeTrackingTicket = (buffer: Buffer) => {
   return deserializeUnchecked(
     SCHEMA,
@@ -466,14 +480,14 @@ export const decodeStore = (buffer: Buffer) => {
 export const decodeAuctionManager = (
   buffer: Buffer,
 ): AuctionManagerV1 | AuctionManagerV2 => {
-  return buffer[0] == MetaplexKey.AuctionManagerV1
+  return buffer[0] === MetaplexKey.AuctionManagerV1
     ? deserializeUnchecked(SCHEMA, AuctionManagerV1, buffer)
     : deserializeUnchecked(SCHEMA, AuctionManagerV2, buffer);
 };
 
 export const decodeBidRedemptionTicket = (buffer: Buffer) => {
   return (
-    buffer[0] == MetaplexKey.BidRedemptionTicketV1
+    buffer[0] === MetaplexKey.BidRedemptionTicketV1
       ? deserializeUnchecked(SCHEMA, BidRedemptionTicketV1, buffer)
       : new BidRedemptionTicketV2({
           key: MetaplexKey.BidRedemptionTicketV2,
@@ -547,7 +561,7 @@ export class BidRedemptionTicketV2 implements BidRedemptionTicket {
   constructor(args: { key: MetaplexKey; data: number[] }) {
     Object.assign(this, args);
     let offset = 2;
-    if (this.data[1] == 0) {
+    if (this.data[1] === 0) {
       this.winnerIndex = null;
     } else {
       this.winnerIndex = new BN(this.data.slice(1, 9), 'le');
@@ -559,7 +573,7 @@ export class BidRedemptionTicketV2 implements BidRedemptionTicket {
 
   getBidRedeemed(order: number): boolean {
     let offset = 42;
-    if (this.data[1] == 0) {
+    if (this.data[1] === 0) {
       offset -= 8;
     }
     const index = Math.floor(order / 8) + offset;
@@ -568,23 +582,8 @@ export class BidRedemptionTicketV2 implements BidRedemptionTicket {
 
     const appliedMask = this.data[index] & mask;
 
-    return appliedMask != 0;
+    return appliedMask !== 0;
   }
-}
-
-export enum AuctionManagerStatus {
-  Initialized,
-  Validated,
-  Running,
-  Disbursing,
-  Finished,
-}
-
-export enum TupleNumericType {
-  U8 = 1,
-  U16 = 2,
-  U32 = 4,
-  U64 = 8,
 }
 
 export class AmountRange {
@@ -656,7 +655,7 @@ export class SafetyDepositConfig {
         this.amountRanges.push(new AmountRange({ amount, length }));
       }
 
-      if (args.data[offset] == 0) {
+      if (args.data[offset] === 0) {
         offset += 1;
         this.participationConfig = null;
       } else {
@@ -666,7 +665,7 @@ export class SafetyDepositConfig {
         let fixedPrice: BN | null = null;
         offset += 3;
 
-        if (args.data[offset] == 1) {
+        if (args.data[offset] === 1) {
           fixedPrice = new BN(args.data.slice(offset + 1, offset + 9), 'le');
           offset += 9;
         } else {
@@ -679,7 +678,7 @@ export class SafetyDepositConfig {
         });
       }
 
-      if (args.data[offset] == 0) {
+      if (args.data[offset] === 0) {
         offset += 1;
         this.participationState = null;
       } else {

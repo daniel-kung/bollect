@@ -96,3 +96,35 @@ export type ProcessAccountsFunc = (
 ) => void;
 
 export type CheckAccountFunc = (account: AccountInfo<Buffer>) => boolean;
+
+export interface Artist {
+  address?: string;
+  name: string;
+  link: string;
+  image: string;
+  itemsAvailable?: number;
+  itemsSold?: number;
+  about?: string;
+  verified?: boolean;
+
+  share?: number;
+}
+
+export enum ArtType {
+  Master,
+  Print,
+  NFT,
+}
+export interface Art {
+  uri: string | undefined;
+  mint: string | undefined;
+  link: string;
+  title: string;
+  artist: string;
+  seller_fee_basis_points?: number;
+  creators?: Artist[];
+  type: ArtType;
+  edition?: number;
+  supply?: number;
+  maxSupply?: number;
+}

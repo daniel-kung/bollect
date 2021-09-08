@@ -40,12 +40,12 @@ export const useFollow = ({
 
   useEffect(() => {
     if (accountAddress) {
-      dispatchRequest(
-        fetchFollowInfo({
-          accountAddress: accountAddress,
-          followAddress: followAddress,
-        }),
-      );
+      // dispatchRequest(
+      //   fetchFollowInfo({
+      //     accountAddress: accountAddress,
+      //     followAddress: followAddress,
+      //   }),
+      // );
     }
   }, [followAddress, dispatchRequest, accountAddress]);
 

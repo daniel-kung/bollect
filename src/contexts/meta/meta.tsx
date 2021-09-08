@@ -58,7 +58,7 @@ export function MetaProvider({ children = null as any }) {
   const connection = useConnection();
   const { isReady, storeAddress } = useStore();
   const searchParams = useQuerySearch();
-  const all = searchParams.get('all') == 'true';
+  const all = searchParams.get('all') === 'true';
 
   const [state, setState] = useState<MetaState>({
     metadata: [],
@@ -105,7 +105,7 @@ export function MetaProvider({ children = null as any }) {
         console.error(er);
       }
     },
-    [setState],
+    [setState, all, connection],
   );
 
   useEffect(() => {
@@ -132,7 +132,15 @@ export function MetaProvider({ children = null as any }) {
 
       updateMints(nextState.metadataByMint);
     })();
-  }, [connection, setState, updateMints, storeAddress, isReady]);
+  }, [
+    connection,
+    setState,
+    updateMints,
+    storeAddress,
+    isReady,
+    all,
+    state.store,
+  ]);
 
   const updateStateValue = useMemo<UpdateStateValueFunc>(
     () => (prop, key, value) => {
@@ -193,6 +201,8 @@ export function MetaProvider({ children = null as any }) {
     store,
     whitelistedCreatorsByCreator,
     isLoading,
+    all,
+    state,
   ]);
 
   // TODO: fetch names dynamically

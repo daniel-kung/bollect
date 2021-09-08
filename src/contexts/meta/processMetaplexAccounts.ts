@@ -70,7 +70,7 @@ export const processMetaplexAccounts: ProcessAccountsFunc = async (
       };
       setter('bidRedemptions', pubkey, parsedAccount);
 
-      if (ticket.key == MetaplexKey.BidRedemptionTicketV2) {
+      if (ticket.key === MetaplexKey.BidRedemptionTicketV2) {
         const asV2 = ticket as BidRedemptionTicketV2;
         if (asV2.winnerIndex) {
           setter(

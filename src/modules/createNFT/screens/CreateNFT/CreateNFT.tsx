@@ -1,5 +1,5 @@
 import { Box, Container, Tooltip, Typography } from '@material-ui/core';
-import { Mutation, useDispatchRequest } from '@redux-requests/react';
+import { useDispatchRequest } from '@redux-requests/react';
 import { NftType } from 'modules/api/common/NftType';
 import { Button } from 'modules/uiKit/Button';
 import { Section } from 'modules/uiKit/Section';
@@ -21,11 +21,10 @@ import {
   queryMyBrandItem,
 } from 'modules/brand/actions/queryMyBrandItem';
 import { ICollectionItem } from 'modules/form/components/CollectionField/CollectionField';
-import {
-  createBrandNFT,
-  useCreateBrandNFT,
-} from 'modules/brand/actions/createBrandNft';
+import { useCreateBrandNFT } from 'modules/brand/actions/createBrandNft';
 import { ReactComponent as QuestionIcon } from '../../../common/assets/question.svg';
+import { ProfileRoutesConfig, ProfileTab } from 'modules/profile/ProfileRoutes';
+import { useHistory } from 'react-router-dom';
 
 const MAX_SIZE: Bytes = 31457280;
 const FILE_ACCEPTS: string[] = [
@@ -91,23 +90,26 @@ const mapperCollectionList = (item: IMyBrand): ICollectionItem => {
 export const CreateNFT = () => {
   const classes = useCreateNFTStyles();
   const dispatch = useDispatchRequest();
-  // const { push } = useHistory();
+  const { push } = useHistory();
   const [selectCollection, setSelectCollection] = useState<ICollectionItem>();
   const [collectionList, setCollectionList] = useState<ICollectionItem[]>([]);
   const { address } = useAccount();
   const { onCreate, nft } = useCreateBrandNFT();
+  const [loading, setLoading] = useState(false);
 
   console.log('nft --- >', nft);
   const handleSubmit = useCallback(
     async (payload: ICreateNFTFormData) => {
       if (!address) return;
+      setLoading(true);
       const nft = await onCreate({
         ...payload,
         standard: NftType.ERC721,
         supply: parseInt(payload.supply, 10),
       });
       console.log('success', nft);
-
+      setLoading(false);
+      push(ProfileRoutesConfig.UserProfile.generatePath(ProfileTab.owned));
       // TODO
       /* if (!selectCollection || !address) return;
       const brandInfo: IBrandInfo = {
@@ -138,7 +140,7 @@ export const CreateNFT = () => {
         }
       }); */
     },
-    [/* dispatch, push, selectCollection,  */ address, onCreate],
+    [push, address, onCreate],
   );
 
   useEffect(() => {
@@ -322,13 +324,9 @@ export const CreateNFT = () => {
             </Box>
           )}
           <Box>
-            <Mutation type={createBrandNFT.toString()}>
-              {({ loading }) => (
-                <Button size="large" type="submit" fullWidth loading={loading}>
-                  {loading ? t('common.submitting') : t('create-nft.submit')}
-                </Button>
-              )}
-            </Mutation>
+            <Button size="large" type="submit" fullWidth loading={loading}>
+              {loading ? t('common.submitting') : t('create-nft.submit')}
+            </Button>
           </Box>
         </div>
       </Box>
