@@ -53,6 +53,7 @@ export const featuresConfig = {
   /**
    * Now this feature is not implemented in the backend
    */
+  drop: false,
   dropDetailsVideo: true,
   collectionFollow: false,
 };

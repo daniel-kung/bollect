@@ -44,6 +44,7 @@ export const fetchProfileInfo = createSmartAction<
       return request;
     },
     getData: data => {
+      console.log('getData--', data);
       if (data.code === 0) {
         console.error('fetchProfileInfo:', data?.msg ?? 'Unexpected error');
         return;

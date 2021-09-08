@@ -39,7 +39,6 @@ export const useLogin = () => {
       const token = authResponse.data.data.token;
       setJWTToken(token);
       setTimeout(() => {
-        dispatch(fetchProfileInfo());
         dispatch(queryLikedItems());
       }, 500);
     } catch (error: any) {

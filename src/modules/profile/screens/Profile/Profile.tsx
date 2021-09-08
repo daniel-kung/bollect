@@ -145,33 +145,33 @@ export const Profile = () => {
         value: ProfileTab.bids,
         label: t('profile.tabs.my-bids'),
       },
-      {
-        value: ProfileTab.activity,
-        label: t('profile.tabs.activity'),
-      },
-      ...(featuresConfig.nftLikes
-        ? [
-            {
-              value: ProfileTab.liked,
-              label: t('profile.tabs.liked'),
-              count: likeCount,
-            },
-          ]
-        : []),
-      ...(featuresConfig.profileFollowers
-        ? [
-            {
-              value: ProfileTab.following,
-              label: t('profile.tabs.following'),
-              count: 0,
-            },
-            {
-              value: ProfileTab.followers,
-              label: t('profile.tabs.followers'),
-              count: 0,
-            },
-          ]
-        : []),
+      // {
+      //   value: ProfileTab.activity,
+      //   label: t('profile.tabs.activity'),
+      // },
+      // ...(featuresConfig.nftLikes
+      //   ? [
+      //       {
+      //         value: ProfileTab.liked,
+      //         label: t('profile.tabs.liked'),
+      //         count: likeCount,
+      //       },
+      //     ]
+      //   : []),
+      // ...(featuresConfig.profileFollowers
+      //   ? [
+      //       {
+      //         value: ProfileTab.following,
+      //         label: t('profile.tabs.following'),
+      //         count: 0,
+      //       },
+      //       {
+      //         value: ProfileTab.followers,
+      //         label: t('profile.tabs.followers'),
+      //         count: 0,
+      //       },
+      //     ]
+      //   : []),
     ],
     [likeCount],
   );
@@ -218,7 +218,7 @@ export const Profile = () => {
         <InfoPanel
           isEditable
           withSharing={featuresConfig.ownProfileSharing}
-          name={profileInfo?.username}
+          name={profileInfo?.username || 'Unname'}
           email={profileInfo?.email}
           subscribers={
             featuresConfig.subscribers && (
@@ -235,7 +235,7 @@ export const Profile = () => {
               />
             )
           }
-          follow={renderFollow()}
+          // follow={renderFollow()}
           address={address}
         />
 
@@ -255,9 +255,9 @@ export const Profile = () => {
           <TabOwned address={address} reload={reload(ProfileTab.owned)} />
         </TabPanel>
 
-        <TabPanel value={tab} index={ProfileTab.collections}>
+        {/* <TabPanel value={tab} index={ProfileTab.collections}>
           <TabCollection />
-        </TabPanel>
+        </TabPanel> */}
 
         <TabPanel value={tab} index={ProfileTab.sells}>
           <TabSale reload={reload(ProfileTab.sells)} />
@@ -267,15 +267,15 @@ export const Profile = () => {
           <TabBids reload={reload(ProfileTab.bids)} />
         </TabPanel>
 
-        <TabPanel value={tab} index={ProfileTab.activity}>
+        {/* <TabPanel value={tab} index={ProfileTab.activity}>
           <TabActivity />
-        </TabPanel>
+        </TabPanel> */}
 
-        {featuresConfig.nftLikes && (
+        {/* {featuresConfig.nftLikes && (
           <TabPanel value={tab} index={ProfileTab.liked}>
             <TabLiked />
           </TabPanel>
-        )}
+        )} */}
       </Container>
     </Section>
   );

@@ -4,7 +4,7 @@ import { useMutation } from '@redux-requests/react';
 import { ConnectedRouter } from 'connected-react-router';
 import { Web3ModalStyles } from 'modules/account/components/Web3ModalStyles';
 import { updateAccount } from 'modules/account/store/actions/updateAccount';
-import React, { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import intl from 'react-intl-universal';
 import { ReactReduxContext } from 'react-redux';
 import 'swiper/swiper-bundle.min.css';
@@ -23,7 +23,6 @@ interface IAppBaseProps {
 export const AppBase = ({ children }: IAppBaseProps) => {
   const [initDone, setInitDone] = useState(false);
   const { locale } = useLocale();
-
   const { loading } = useMutation({
     type: updateAccount.toString(),
   });

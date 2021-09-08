@@ -59,10 +59,10 @@ export const HeaderLinks = () => {
   const { onItemClick } = useHeaderLinks();
   const items = useMemo(
     () => [
-      {
-        label: t('header.drops'),
-        href: DropsRoutesConfig.Drops.generatePath(),
-      },
+      // {
+      //   label: t('header.drops'),
+      //   href: DropsRoutesConfig.Drops.generatePath(),
+      // },
       {
         label: t('header.market'),
         href: MarketRoutesConfig.Market.generatePath(),

@@ -30,7 +30,7 @@ import { Themes } from './modules/themes/types';
 export function Routes() {
   return (
     <Switch>
-      <Route exact path="/" render={() => <Redirect to="/drops" />} />
+      <Route exact path="/" render={() => <Redirect to="/index" />} />
 
       <Route
         exact

@@ -41,11 +41,8 @@ export const editProfileBgImg = createSmartAction<RequestAction>(
         _action: RequestAction,
         store: Store<RootState> & { dispatchRequest: DispatchRequest },
       ) => {
-        const {
-          data: { address },
-        } = getQuery<ISetAccountData>(store.getState(), {
-          type: setAccount.toString(),
-        });
+        const state: RootState = store.getState();
+        const address = state.user.address;
 
         request.data.accountaddress = address;
 

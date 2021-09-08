@@ -1996,7 +1996,7 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@oyster/common@file:../../test/metaplex/js/packages/common":
+"@oyster/common@file:E:/Demo_Code/metaplex/js/packages/common":
   version "0.0.2"
   dependencies:
     "@project-serum/serum" "^0.13.52"

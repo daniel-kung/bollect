@@ -4,6 +4,7 @@ import {
   ISetAccountData,
   setAccount,
 } from 'modules/account/store/actions/setAccount';
+import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
 import { isValidEmail } from 'modules/common/utils/isValidEmail';
 import { isValidWebsiteUrl } from 'modules/common/utils/isValidWebsiteUrl';
 import { InputField } from 'modules/form/components/InputField';
@@ -69,15 +70,10 @@ const BIO_CHARACTER_LIMIT = 200;
 
 export const EditProfile = () => {
   const dispatch = useDispatchRequest();
+  const { address } = useReactWeb3();
 
   const { data: profileInfo } = useQuery<IProfileInfo | null>({
     type: fetchProfileInfo.toString(),
-  });
-
-  const {
-    data: { address },
-  } = useQuery<ISetAccountData>({
-    type: setAccount.toString(),
   });
 
   const handleSubmit = useCallback(
@@ -92,7 +88,7 @@ export const EditProfile = () => {
           instagram: payload?.instagram,
           twitter: payload?.twitter,
           facebook: payload?.facebook,
-          accountAddress: address,
+          accountAddress: address || '',
         }),
       );
     },
