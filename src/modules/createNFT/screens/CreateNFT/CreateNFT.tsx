@@ -65,6 +65,10 @@ const validateCreateNFT = (payload: ICreateNFTFormData) => {
     errors.description = t('validation.required');
   }
 
+  if (!payload.supply) {
+    errors.supply = t('validation.required');
+  }
+
   if (!payload.file) {
     errors.file = t('validation.required');
   } else if (!FILE_ACCEPTS.includes(payload.file.type)) {
@@ -101,34 +105,61 @@ export const CreateNFT = () => {
 
   const handleSubmit = useCallback(
     (payload: ICreateNFTFormData) => {
-      if (!selectCollection || !address) return;
-      const brandInfo: IBrandInfo = {
-        brandname: selectCollection.collectionName,
-        brandsymbol: selectCollection.symbol,
-        contractaddress: selectCollection.contractAddress,
-        id: selectCollection.id,
-        owneraddress: selectCollection.owneraddress,
-        ownername: selectCollection.ownername,
-        standard: selectCollection.nftType,
-      };
-      dispatch(
-        createBrandNFT(
-          {
-            ...payload,
-            standard: selectCollection.nftType,
-            supply: parseInt(payload.supply, 10),
+      // if (!selectCollection || !address) return;
+      // const brandInfo: IBrandInfo = {
+      //   brandname: selectCollection.collectionName,
+      //   brandsymbol: selectCollection.symbol,
+      //   contractaddress: selectCollection.contractAddress,
+      //   id: selectCollection.id,
+      //   owneraddress: selectCollection.owneraddress,
+      //   ownername: selectCollection.ownername,
+      //   standard: selectCollection.nftType,
+      // };
+      // dispatch(
+      //   createBrandNFT(
+      //     {
+      //       ...payload,
+      //       standard: selectCollection.nftType,
+      //       supply: parseInt(payload.supply, 10),
+      //     },
+      //     brandInfo,
+      //   ),
+      // ).then(({ error }) => {
+      //   if (!error) {
+      //     push(
+      //       ProfileRoutesConfig.UserProfile.generatePath(
+      //         ProfileTab.collections,
+      //       ),
+      //     );
+      //   }
+      // });
+
+      const metadataContent = {
+        name: payload.name,
+        symbol: 'test_symbol', // payload.symbol
+        description: payload.description,
+        seller_fee_basis_points: 'test_royalty_points',
+        image: undefined,
+        animation_url: undefined,
+        attributes: [],
+        external_url: undefined,
+        properties: {
+          files: [payload.file],
+          category: 'image',
+          channel: payload.channel,
+          creators: {
+            address: 'AhNbarZ7LBjJayxWtvsygAXz78iMsbXrBxe1c3pTHKDs',
+            share: 0,
           },
-          brandInfo,
-        ),
-      ).then(({ error }) => {
-        if (!error) {
-          push(
-            ProfileRoutesConfig.UserProfile.generatePath(
-              ProfileTab.collections,
-            ),
-          );
-        }
-      });
+        },
+      };
+      // console.log(payload.file)
+      const realFiles: File[] = [
+        payload.file,
+        new File([JSON.stringify(metadataContent)], 'metadata.json'),
+      ];
+
+      console.log('0x358708d27091d8623028e2734112096E0471C082');
     },
     [dispatch, push, selectCollection, address],
   );
@@ -281,7 +312,7 @@ export const CreateNFT = () => {
               options={channelOptions}
             />
           </Box>
-          <Box mb={5}>
+          {/* <Box mb={5}>
             <Field
               component={renderCollection}
               name="collection"
@@ -292,8 +323,8 @@ export const CreateNFT = () => {
               rowsMax={10}
               multiline
             />
-          </Box>
-          {selectCollection?.nftType === NftType.ERC1155 && (
+          </Box> */}
+          {
             <Box mb={5}>
               <Field
                 component={InputField}
@@ -310,7 +341,7 @@ export const CreateNFT = () => {
                 }}
               />
             </Box>
-          )}
+          }
           <Box>
             <Mutation type={createBrandNFT.toString()}>
               {({ loading }) => (

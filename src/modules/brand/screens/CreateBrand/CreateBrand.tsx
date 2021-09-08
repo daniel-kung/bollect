@@ -103,15 +103,19 @@ export const CreateBrand = () => {
 
   const handleSubmit = useCallback(
     (payload: ICreateBrandValues) => {
-      dispatch(createBrand(payload)).then(({ error }) => {
-        if (!error) {
-          replace(
-            ProfileRoutesConfig.UserProfile.generatePath(
-              ProfileTab.collections,
-            ),
-          );
-        }
-      });
+      // dispatch(createBrand(payload)).then(({ error }) => {
+      //   if (!error) {
+      //     replace(
+      //       ProfileRoutesConfig.UserProfile.generatePath(
+      //         ProfileTab.collections,
+      //       ),
+      //     );
+      //   }
+      // });
+
+      // HM 在这里创建 Collection
+
+      alert('创建 Collection');
     },
     [dispatch, replace],
   );
