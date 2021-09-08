@@ -27,21 +27,19 @@ import {
 } from '@oyster/common';
 import { MAX_WHITELISTED_CREATOR_SIZE } from '../../models/metaplex';
 
-async function getProgramAccounts(
+export async function getProgramAccounts(
   connection: Connection,
   programId: StringPublicKey,
   configOrCommitment?: any,
 ): Promise<Array<AccountAndPubkey>> {
   const extra: any = {};
   let commitment;
-  let encoding;
 
   if (configOrCommitment) {
     if (typeof configOrCommitment === 'string') {
       commitment = configOrCommitment;
     } else {
       commitment = configOrCommitment.commitment;
-      encoding = configOrCommitment.encoding;
 
       if (configOrCommitment.dataSlice) {
         extra.dataSlice = configOrCommitment.dataSlice;
@@ -121,6 +119,7 @@ export const loadAccounts = async (connection: Connection, all: boolean) => {
     process.env.NEXT_PUBLIC_BIG_STORE?.toLowerCase() === 'true';
   console.log(`Is big store: ${IS_BIG_STORE}`);
 
+  // eslint-disable-next-line
   const promises = [
     getProgramAccounts(connection, VAULT_ID).then(forEach(processVaultData)),
     getProgramAccounts(connection, AUCTION_ID).then(forEach(processAuctions)),

@@ -25,8 +25,9 @@ export const processMetaData: ProcessAccountsFunc = (
       const metadata = decodeMetadata(account.data);
 
       if (
-        isValidHttpUrl(metadata.data.uri) &&
-        metadata.data.uri.indexOf('arweave') >= 0
+        isValidHttpUrl(metadata.data.uri)
+        // &&
+        // metadata.data.uri.indexOf('arweave') >= 0
       ) {
         const parsedAccount: ParsedAccount<Metadata> = {
           pubkey,
