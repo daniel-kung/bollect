@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@oyster/common": "file:G:/test/metaplex/js/packages/common",
+    "@solana/spl-token": "0.1.6",
     "@apollo/client": "^3.3.14",
     "@binance-chain/bsc-connector": "^1.0.0",
     "@date-io/date-fns": "1.x",

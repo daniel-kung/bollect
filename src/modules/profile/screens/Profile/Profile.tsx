@@ -133,10 +133,10 @@ export const Profile = () => {
         value: ProfileTab.sells,
         label: t('profile.tabs.my-sells'),
       },
-      {
-        value: ProfileTab.collections,
-        label: t('profile.tabs.my-collections'),
-      },
+      // {
+      //   value: ProfileTab.collections,
+      //   label: t('profile.tabs.my-collections'),
+      // },
       {
         value: ProfileTab.owned,
         label: t('profile.tabs.showcase'),

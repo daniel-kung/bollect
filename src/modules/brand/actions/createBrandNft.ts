@@ -1,17 +1,25 @@
-import { TransactionReceipt } from '@ethersproject/abstract-provider';
-import { DispatchRequest, getQuery, RequestAction } from '@redux-requests/core';
+import {
+  useConnection,
+  StringPublicKey,
+  useConnectionConfig,
+  Creator,
+} from '@oyster/common';
+import { DispatchRequest, RequestAction } from '@redux-requests/core';
+// import { useDispatchRequest } from '@redux-requests/react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { PublicKey } from '@solana/web3.js';
 import { NftType } from 'modules/api/common/NftType';
 import { uploadFile } from 'modules/common/actions/uploadFile';
+import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
 import { addItem, IAddItemPayload } from 'modules/createNFT/actions/addItem';
 import { Channel } from 'modules/createNFT/actions/createNft';
+import { useState } from 'react';
 import { Store } from 'redux';
 import { createAction as createSmartAction } from 'redux-smart-actions';
 import { RootState } from 'store';
-import { setAccount } from '../../account/store/actions/setAccount';
 import { isVideo } from '../../common/utils/isVideo';
-import { BounceErc1155, BounceErc721 } from '../../web3/contracts';
 import { IBrandInfo } from '../api/queryBrand';
-
+import { mintNFT } from './mintSolNft';
 export interface ICreateNFTPayload {
   name: string;
   description: string;
@@ -20,6 +28,105 @@ export interface ICreateNFTPayload {
   supply: number;
   file: File;
 }
+
+export const useCreateBrandNFT = () => {
+  const connection = useConnection();
+  const wallet = useWallet();
+  const { env } = useConnectionConfig();
+  // const dispatchRequest = useDispatchRequest();
+  const { address, account } = useReactWeb3();
+  const [nft, setNft] = useState<
+    { metadataAccount: StringPublicKey } | undefined
+  >(undefined);
+
+  const onCreate = async (
+    { file, standard, supply, name, description, channel }: ICreateNFTPayload,
+    brandInfo?: IBrandInfo,
+  ) => {
+    const category = isVideo(file) ? 'video' : 'image';
+    const maxSupply = standard === NftType.ERC721 ? 1 : supply;
+    /* const { data } = await dispatchRequest(uploadFile({ file }));
+    const path = data?.result.path ?? '';
+    const brandid = brandInfo.id;
+    const collectionAddress = brandInfo.contractaddress;
+
+    const addItemPayload: IAddItemPayload = {
+      brandid,
+      category,
+      channel,
+      contractaddress: collectionAddress,
+      description,
+      fileurl: path,
+      itemname: name,
+      itemsymbol: brandInfo.brandsymbol,
+      owneraddress: brandInfo.owneraddress,
+      ownername: brandInfo.ownername,
+      standard: brandInfo.standard,
+      supply: maxSupply,
+    };
+
+    const { data: addItemData } = await dispatchRequest(
+      addItem(addItemPayload),
+    );
+
+    if (!addItemData) {
+      throw new Error("Item hasn't been added");
+    } */
+
+    const creators = [
+      new Creator({
+        address: address ?? '',
+        share: 100,
+        verified: true,
+      }),
+    ];
+    const attributes: {
+      display_type: string;
+      trait_type: string;
+      value: number;
+    }[] = [];
+    const metadata = {
+      name: name,
+      symbol: brandInfo?.brandsymbol ?? '',
+      creators,
+      description,
+      sellerFeeBasisPoints: 0,
+      image: file.name ?? '',
+      animation_url: undefined,
+      attributes: attributes,
+      external_url: '',
+      properties: {
+        files: [file],
+        category,
+      },
+      // // TODO collection
+      // collection: {
+      //   name: '',
+      //   family: brandid,
+      // },
+    };
+
+    console.log('---metadata', metadata);
+    const _nft = await mintNFT(
+      connection,
+      {
+        publicKey: account as unknown as PublicKey | null,
+        signTransaction: wallet.signTransaction,
+        signAllTransactions: wallet.signAllTransactions,
+      },
+      env,
+      metadata,
+      maxSupply,
+    );
+
+    if (_nft) setNft(_nft);
+    return _nft;
+  };
+  return {
+    onCreate,
+    nft,
+  };
+};
 // TODO: Remove timers
 export const createBrandNFT = createSmartAction(
   'createBrandNFT',
@@ -41,26 +148,25 @@ export const createBrandNFT = createSmartAction(
           promise: (async function () {
             const { data } = await store.dispatchRequest(uploadFile({ file }));
 
-            const {
-              data: { address, web3 },
-            } = getQuery(store.getState(), {
-              type: setAccount.toString(),
-              action: setAccount,
-            });
+            const path = data?.result.path ?? '';
+            const category = isVideo(file) ? 'video' : 'image';
+            const brandid = brandInfo.id;
+            const maxSupply = standard === NftType.ERC721 ? 1 : supply;
+            const collectionAddress = brandInfo.contractaddress;
 
             const addItemPayload: IAddItemPayload = {
-              brandid: brandInfo.id,
-              category: isVideo(file) ? 'video' : 'image',
+              brandid,
+              category,
               channel,
-              contractaddress: brandInfo.contractaddress,
+              contractaddress: collectionAddress,
               description,
-              fileurl: data?.result.path || '',
+              fileurl: path,
               itemname: name,
               itemsymbol: brandInfo.brandsymbol,
               owneraddress: brandInfo.owneraddress,
               ownername: brandInfo.ownername,
               standard: brandInfo.standard,
-              supply: standard === NftType.ERC721 ? 1 : supply,
+              supply: maxSupply,
             };
 
             const { data: addItemData } = await store.dispatchRequest(
@@ -69,51 +175,6 @@ export const createBrandNFT = createSmartAction(
 
             if (!addItemData) {
               throw new Error("Item hasn't been added");
-            }
-
-            if (standard === NftType.ERC721) {
-              return await new Promise((resolve, reject) => {
-                const ContractBounceERC72 = new web3.eth.Contract(
-                  BounceErc721,
-                  brandInfo.contractaddress,
-                );
-
-                ContractBounceERC72.methods
-                  .mint(address, addItemData.id)
-                  .send({ from: address })
-                  .on('transactionHash', (hash: string) => {
-                    // Pending status
-                  })
-                  .on('receipt', async (receipt: TransactionReceipt) => {
-                    setTimeout(() => {
-                      resolve(receipt);
-                    }, 15000);
-                  })
-                  .on('error', (error: Error) => {
-                    reject(error);
-                  });
-              });
-            } else if (standard === NftType.ERC1155) {
-              return await new Promise((resolve, reject) => {
-                const ContractBounceERC1155 = new web3.eth.Contract(
-                  BounceErc1155,
-                  brandInfo.contractaddress,
-                );
-                ContractBounceERC1155.methods
-                  .mint(address, addItemData.id, supply, 0)
-                  .send({ from: address })
-                  .on('transactionHash', (hash: string) => {
-                    // Pending status
-                  })
-                  .on('receipt', async (receipt: TransactionReceipt) => {
-                    setTimeout(() => {
-                      resolve(receipt);
-                    }, 15000);
-                  })
-                  .on('error', (error: Error) => {
-                    reject(error);
-                  });
-              });
             }
           })(),
         };

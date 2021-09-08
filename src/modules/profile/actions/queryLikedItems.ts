@@ -76,11 +76,7 @@ export const queryLikedItems = createSmartAction<
     ) => {
       const state: RootState = store.getState();
       const address = state.user.address;
-      console.log('---getaccountlike---');
-      console.log(address);
-
       request.data = { accountaddress: address };
-
       return request;
     },
     getData: data => {

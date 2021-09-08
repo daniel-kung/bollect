@@ -5,7 +5,6 @@ import { Button } from 'modules/uiKit/Button';
 import { Section } from 'modules/uiKit/Section';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Field, Form, FormRenderProps } from 'react-final-form';
-import { useHistory } from 'react-router';
 import { Bytes, convertBytesToMegabytes } from '../../../common/types/unit';
 import { InputField } from '../../../form/components/InputField';
 import { SelectField } from '../../../form/components/SelectField';
@@ -14,10 +13,6 @@ import { CollectionField } from '../../../form/components/CollectionField';
 import { FormErrors } from '../../../form/utils/FormErrors';
 import { t } from '../../../i18n/utils/intl';
 import { GoBack } from '../../../layout/components/GoBack';
-import {
-  ProfileRoutesConfig,
-  ProfileTab,
-} from '../../../profile/ProfileRoutes';
 import { Channel, ICreateNFTPayload } from '../../actions/createNft';
 import { useCreateNFTStyles } from './useCreateNFTStyles';
 import { useAccount } from 'modules/account/hooks/useAccount';
@@ -26,8 +21,10 @@ import {
   queryMyBrandItem,
 } from 'modules/brand/actions/queryMyBrandItem';
 import { ICollectionItem } from 'modules/form/components/CollectionField/CollectionField';
-import { createBrandNFT } from 'modules/brand/actions/createBrandNft';
-import { IBrandInfo } from 'modules/brand/api/queryBrand';
+import {
+  createBrandNFT,
+  useCreateBrandNFT,
+} from 'modules/brand/actions/createBrandNft';
 import { ReactComponent as QuestionIcon } from '../../../common/assets/question.svg';
 
 const MAX_SIZE: Bytes = 31457280;
@@ -94,14 +91,25 @@ const mapperCollectionList = (item: IMyBrand): ICollectionItem => {
 export const CreateNFT = () => {
   const classes = useCreateNFTStyles();
   const dispatch = useDispatchRequest();
-  const { push } = useHistory();
+  // const { push } = useHistory();
   const [selectCollection, setSelectCollection] = useState<ICollectionItem>();
   const [collectionList, setCollectionList] = useState<ICollectionItem[]>([]);
   const { address } = useAccount();
+  const { onCreate, nft } = useCreateBrandNFT();
 
+  console.log('nft --- >', nft);
   const handleSubmit = useCallback(
-    (payload: ICreateNFTFormData) => {
-      if (!selectCollection || !address) return;
+    async (payload: ICreateNFTFormData) => {
+      if (!address) return;
+      const nft = await onCreate({
+        ...payload,
+        standard: NftType.ERC721,
+        supply: parseInt(payload.supply, 10),
+      });
+      console.log('success', nft);
+
+      // TODO
+      /* if (!selectCollection || !address) return;
       const brandInfo: IBrandInfo = {
         brandname: selectCollection.collectionName,
         brandsymbol: selectCollection.symbol,
@@ -128,9 +136,9 @@ export const CreateNFT = () => {
             ),
           );
         }
-      });
+      }); */
     },
-    [dispatch, push, selectCollection, address],
+    [/* dispatch, push, selectCollection,  */ address, onCreate],
   );
 
   useEffect(() => {
@@ -281,18 +289,20 @@ export const CreateNFT = () => {
               options={channelOptions}
             />
           </Box>
-          <Box mb={5}>
-            <Field
-              component={renderCollection}
-              name="collection"
-              type="text"
-              label={t('create-nft.label.collection')}
-              color="primary"
-              fullWidth={true}
-              rowsMax={10}
-              multiline
-            />
-          </Box>
+          {false && (
+            <Box mb={5}>
+              <Field
+                component={renderCollection}
+                name="collection"
+                type="text"
+                label={t('create-nft.label.collection')}
+                color="primary"
+                fullWidth={true}
+                rowsMax={10}
+                multiline
+              />
+            </Box>
+          )}
           {selectCollection?.nftType === NftType.ERC1155 && (
             <Box mb={5}>
               <Field

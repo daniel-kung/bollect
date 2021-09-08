@@ -1,14 +1,9 @@
 import {
   DispatchRequest,
-  getQuery,
   RequestAction,
   RequestActionMeta,
 } from '@redux-requests/core';
 
-import {
-  ISetAccountData,
-  setAccount,
-} from 'modules/account/store/actions/setAccount';
 import { Store } from 'redux';
 import { createAction as createSmartAction } from 'redux-smart-actions';
 import { RootState } from 'store';
@@ -43,22 +38,13 @@ export const fetchProfileInfo = createSmartAction<
       _action: RequestAction,
       store: Store<RootState> & { dispatchRequest: DispatchRequest },
     ) => {
-      const { data: accountData } = getQuery<ISetAccountData | null>(
-        store.getState(),
-        {
-          type: setAccount.toString(),
-        },
-      );
-
-      request.data = {
-        accountaddress: params?.address ?? accountData?.address,
-      };
-
+      const state: RootState = store.getState();
+      const address = state.user.address;
+      request.data = { accountaddress: address };
       return request;
     },
     getData: data => {
       if (data.code === 0) {
-        // historyInstance.replace(ProfileRoutesConfig.EditProfile.generatePath());
         console.error('fetchProfileInfo:', data?.msg ?? 'Unexpected error');
         return;
       }

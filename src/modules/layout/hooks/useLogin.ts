@@ -5,6 +5,7 @@ import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
 import { extractMessage } from 'modules/common/utils/extractError';
 import { setJWTToken } from 'modules/common/utils/localStorage';
 import { NotificationActions } from 'modules/notification/store/NotificationActions';
+import { fetchProfileInfo } from 'modules/profile/actions/fetchProfileInfo';
 import { queryLikedItems } from 'modules/profile/actions/queryLikedItems';
 import { useDispatch } from 'react-redux';
 
@@ -38,6 +39,7 @@ export const useLogin = () => {
       const token = authResponse.data.data.token;
       setJWTToken(token);
       setTimeout(() => {
+        dispatch(fetchProfileInfo());
         dispatch(queryLikedItems());
       }, 500);
     } catch (error: any) {
