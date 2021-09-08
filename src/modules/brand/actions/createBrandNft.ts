@@ -5,6 +5,7 @@ import {
   Creator,
 } from '@oyster/common';
 import { DispatchRequest, RequestAction } from '@redux-requests/core';
+import { useDispatchRequest } from '@redux-requests/react';
 // import { useDispatchRequest } from '@redux-requests/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
@@ -33,7 +34,7 @@ export const useCreateBrandNFT = () => {
   const connection = useConnection();
   const wallet = useWallet();
   const { env } = useConnectionConfig();
-  // const dispatchRequest = useDispatchRequest();
+  const dispatchRequest = useDispatchRequest();
   const { address, account } = useReactWeb3();
   const [nft, setNft] = useState<
     { metadataAccount: StringPublicKey } | undefined
@@ -45,9 +46,9 @@ export const useCreateBrandNFT = () => {
   ) => {
     const category = isVideo(file) ? 'video' : 'image';
     const maxSupply = standard === NftType.ERC721 ? 1 : supply;
-    /* const { data } = await dispatchRequest(uploadFile({ file }));
+    const { data } = await dispatchRequest(uploadFile({ file }));
     const path = data?.result.path ?? '';
-    const brandid = brandInfo.id;
+    /* const brandid = brandInfo.id;
     const collectionAddress = brandInfo.contractaddress;
 
     const addItemPayload: IAddItemPayload = {
@@ -91,7 +92,7 @@ export const useCreateBrandNFT = () => {
       creators,
       description,
       sellerFeeBasisPoints: 0,
-      image: file.name ?? '',
+      image: path ?? '',
       animation_url: undefined,
       attributes: attributes,
       external_url: '',
@@ -117,6 +118,7 @@ export const useCreateBrandNFT = () => {
       env,
       metadata,
       maxSupply,
+      dispatchRequest,
     );
 
     if (_nft) setNft(_nft);

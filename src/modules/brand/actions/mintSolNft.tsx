@@ -21,6 +21,8 @@ import { MintLayout, Token } from '@solana/spl-token';
 import { Keypair, Connection, TransactionInstruction } from '@solana/web3.js';
 import crypto from 'crypto';
 import BN from 'bn.js';
+import { uploadFile } from 'modules/common/actions/uploadFile';
+import { DispatchRequest } from '@redux-requests/core';
 
 export const mintNFT = async (
   connection: Connection,
@@ -39,6 +41,7 @@ export const mintNFT = async (
     sellerFeeBasisPoints: number;
   },
   maxSupply: number,
+  dispatchRequest: DispatchRequest,
 ): Promise<{
   metadataAccount: StringPublicKey;
 } | void> => {
@@ -64,9 +67,11 @@ export const mintNFT = async (
     },
   };
 
-  const realFiles: File[] = [
-    new File([JSON.stringify(metadataContent)], 'metadata.json'),
-  ];
+  const metadataContentFile = new File(
+    [JSON.stringify(metadataContent)],
+    'metadata.json',
+  );
+  const realFiles: File[] = [metadataContentFile];
 
   const { instructions: pushInstructions, signers: pushSigners } =
     await prepPayForFilesTxn(wallet, realFiles, metadata);
@@ -177,11 +182,15 @@ export const mintNFT = async (
   );
    */
 
-  console.log('metadataAccount------->', metadataAccount);
   // TODO: connect to testnet arweave
-  const metadataUri = `http://test`;
+  console.log('metadataContent, realFiles');
+  console.log(metadataContent, realFiles);
+  const { data } = await dispatchRequest(
+    uploadFile({ file: metadataContentFile }),
+  );
+  const metadataUri = data?.result?.path;
 
-  if (wallet.publicKey) {
+  if (metadataUri && wallet.publicKey) {
     const updateInstructions: TransactionInstruction[] = [];
     const updateSigners: Keypair[] = [];
 
