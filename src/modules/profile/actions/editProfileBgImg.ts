@@ -1,8 +1,4 @@
-import { DispatchRequest, getQuery, RequestAction } from '@redux-requests/core';
-import {
-  ISetAccountData,
-  setAccount,
-} from 'modules/account/store/actions/setAccount';
+import { DispatchRequest, RequestAction } from '@redux-requests/core';
 import { Store } from 'redux';
 import { createAction as createSmartAction } from 'redux-smart-actions';
 import { RootState } from 'store';

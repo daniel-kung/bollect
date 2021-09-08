@@ -18,25 +18,21 @@ import { InfoPanel } from 'modules/profile/components/InfoPanel';
 import { SetAvatarModal } from 'modules/profile/components/SetAvatarModal';
 import { SetBgImgModal } from 'modules/profile/components/SetBgImgModal';
 import { Subscribers } from 'modules/profile/components/Subscribers';
-import { FollowGroup } from 'modules/profile/components/TabFollowing';
-import { TabCollection } from 'modules/profile/components/TabCollection';
 import { TabPanel } from 'modules/profile/components/TabPanel';
 import { Tabs } from 'modules/profile/components/Tabs';
 import { Tab } from 'modules/profile/components/Tabs/Tab';
 import { ProfileRoutesConfig, ProfileTab } from 'modules/profile/ProfileRoutes';
 import { Section } from 'modules/uiKit/Section';
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { uid } from 'react-uid';
-import { TabActivity } from '../../components/TabActivity';
 import { TabBids } from './components/TabBids';
-import { TabLiked } from './components/TabLiked';
 import { TabOwned } from './components/tabOwned';
 import { TabSale } from './components/TabSale';
 import { useProfileStyles } from './useProfileStyles';
-import { RootState } from 'store/store';
+// import { RootState } from 'store/store';
 import useCdnUrl from 'modules/common/hooks/useCdnUrl';
 
 export const Profile = () => {
@@ -48,9 +44,9 @@ export const Profile = () => {
   const { push } = useHistory();
   const dispatch = useDispatch();
 
-  const { count: likeCount } = useSelector<RootState, RootState['like']>(
-    state => state.like,
-  );
+  // const { count: likeCount } = useSelector<RootState, RootState['like']>(
+  //   state => state.like,
+  // );
 
   const { data: profileInfo } = useQuery<IProfileInfo | null>({
     type: fetchProfileInfo.toString(),
@@ -173,20 +169,20 @@ export const Profile = () => {
       //     ]
       //   : []),
     ],
-    [likeCount],
+    [],
   );
 
-  const renderFollow = useCallback(() => {
-    if (!address) return;
-    return (
-      <FollowGroup
-        followAddress={address}
-        followersCount={profileInfo?.followersCount}
-        followingCount={profileInfo?.followingCount}
-        black={true}
-      />
-    );
-  }, [profileInfo, address]);
+  // const renderFollow = useCallback(() => {
+  //   if (!address) return;
+  //   return (
+  //     <FollowGroup
+  //       followAddress={address}
+  //       followersCount={profileInfo?.followersCount}
+  //       followingCount={profileInfo?.followingCount}
+  //       black={true}
+  //     />
+  //   );
+  // }, [profileInfo, address]);
 
   return (
     <Section className={classes.root}>

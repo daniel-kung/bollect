@@ -1,9 +1,5 @@
 import { Box, Button, Container, Typography } from '@material-ui/core';
 import { Mutation, useDispatchRequest, useQuery } from '@redux-requests/react';
-import {
-  ISetAccountData,
-  setAccount,
-} from 'modules/account/store/actions/setAccount';
 import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
 import { isValidEmail } from 'modules/common/utils/isValidEmail';
 import { isValidWebsiteUrl } from 'modules/common/utils/isValidWebsiteUrl';

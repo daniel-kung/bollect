@@ -1,8 +1,7 @@
-import { DropsRoutesConfig } from 'modules/drops/Routes';
 import { useLayout } from 'modules/layout/hooks/useLayout';
 import { MarketRoutesConfig } from 'modules/market/Routes';
 import { Button } from 'modules/uiKit/Button';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { uid } from 'react-uid';
 import { t } from '../../../i18n/utils/intl';
