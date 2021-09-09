@@ -25,6 +25,9 @@ import { useCreateBrandNFT } from 'modules/brand/actions/createBrandNft';
 import { ReactComponent as QuestionIcon } from '../../../common/assets/question.svg';
 import { ProfileRoutesConfig, ProfileTab } from 'modules/profile/ProfileRoutes';
 import { useHistory } from 'react-router-dom';
+import { NotificationActions } from 'modules/notification/store/NotificationActions';
+import { useDispatch } from 'react-redux';
+import { extractMessage } from 'modules/common/utils/extractError';
 
 const MAX_SIZE: Bytes = 31457280;
 const FILE_ACCEPTS: string[] = [
@@ -61,6 +64,10 @@ const validateCreateNFT = (payload: ICreateNFTFormData) => {
     errors.description = t('validation.required');
   }
 
+  if (parseFloat((payload?.points ?? 0)?.toString()) > 100) {
+    errors.points = t('validation.required');
+  }
+
   if (!payload.file) {
     errors.file = t('validation.required');
   } else if (!FILE_ACCEPTS.includes(payload.file.type)) {
@@ -89,58 +96,39 @@ const mapperCollectionList = (item: IMyBrand): ICollectionItem => {
 
 export const CreateNFT = () => {
   const classes = useCreateNFTStyles();
+  const storeDispatch = useDispatch();
   const dispatch = useDispatchRequest();
   const { push } = useHistory();
   const [selectCollection, setSelectCollection] = useState<ICollectionItem>();
   const [collectionList, setCollectionList] = useState<ICollectionItem[]>([]);
   const { address } = useAccount();
-  const { onCreate, nft } = useCreateBrandNFT();
+  const { onCreate } = useCreateBrandNFT();
   const [loading, setLoading] = useState(false);
 
-  console.log('nft --- >', nft);
   const handleSubmit = useCallback(
     async (payload: ICreateNFTFormData) => {
       if (!address) return;
       setLoading(true);
-      const nft = await onCreate({
-        ...payload,
-        standard: NftType.ERC721,
-        supply: parseInt(payload.supply, 10),
-      });
-      console.log('success', nft);
-      setLoading(false);
-      push(ProfileRoutesConfig.UserProfile.generatePath(ProfileTab.owned));
-      // TODO
-      /* if (!selectCollection || !address) return;
-      const brandInfo: IBrandInfo = {
-        brandname: selectCollection.collectionName,
-        brandsymbol: selectCollection.symbol,
-        contractaddress: selectCollection.contractAddress,
-        id: selectCollection.id,
-        owneraddress: selectCollection.owneraddress,
-        ownername: selectCollection.ownername,
-        standard: selectCollection.nftType,
-      };
-      dispatch(
-        createBrandNFT(
-          {
-            ...payload,
-            standard: selectCollection.nftType,
-            supply: parseInt(payload.supply, 10),
-          },
-          brandInfo,
-        ),
-      ).then(({ error }) => {
-        if (!error) {
-          push(
-            ProfileRoutesConfig.UserProfile.generatePath(
-              ProfileTab.collections,
-            ),
-          );
-        }
-      }); */
+      try {
+        const nft = await onCreate({
+          ...payload,
+          standard: NftType.ERC721,
+          supply: parseInt(payload.supply, 10),
+        });
+        console.log('success', nft);
+        setLoading(false);
+        push(ProfileRoutesConfig.UserProfile.generatePath(ProfileTab.owned));
+      } catch (error) {
+        setLoading(false);
+        storeDispatch(
+          NotificationActions.showNotification({
+            message: extractMessage(new Error('error')),
+            severity: 'error',
+          }),
+        );
+      }
     },
-    [push, address, onCreate],
+    [push, address, onCreate, storeDispatch],
   );
 
   useEffect(() => {
@@ -291,6 +279,30 @@ export const CreateNFT = () => {
               options={channelOptions}
             />
           </Box>
+          <Box mb={5}>
+            <Field
+              component={InputField}
+              name="points"
+              type="number"
+              max="100"
+              label={t('create-nft.label.seller-fee-basis-points')}
+              placeholder={t(
+                'create-nft.label.seller-fee-basis-points-placeholder',
+              )}
+              color="primary"
+              fullWidth={true}
+            />
+          </Box>
+          <Box mb={5}>
+            <Field
+              component={InputField}
+              name="supply"
+              type="number"
+              label={t('create-nft.label.max-supply')}
+              color="primary"
+              fullWidth={true}
+            />
+          </Box>
           {false && (
             <Box mb={5}>
               <Field
@@ -305,7 +317,7 @@ export const CreateNFT = () => {
               />
             </Box>
           )}
-          {selectCollection?.nftType === NftType.ERC1155 && (
+          {false && (
             <Box mb={5}>
               <Field
                 component={InputField}
@@ -350,6 +362,7 @@ export const CreateNFT = () => {
             initialValues={{
               channel: Channel.FineArts,
               standard: NftType.ERC721,
+              supply: '0',
             }}
           />
         </Box>

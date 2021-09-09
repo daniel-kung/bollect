@@ -6,7 +6,6 @@ import { UploadFileType } from 'modules/common/actions/uploadFile';
 import { Social } from 'modules/common/components/Social';
 import { featuresConfig } from 'modules/common/conts';
 import { t } from 'modules/i18n/utils/intl';
-import { fetchOwned } from 'modules/profile/actions/fetchOwned';
 import { fetchProfileInfo } from 'modules/profile/actions/fetchProfileInfo';
 import { fetchMyBids, fetchMySale } from 'modules/profile/actions/fetchSale';
 import { queryLikedItems } from 'modules/profile/actions/queryLikedItems';
@@ -79,7 +78,7 @@ export const Profile = () => {
           break;
         }
         case ProfileTab.owned: {
-          dispatch(fetchOwned({ address }));
+          // dispatch(fetchOwned({ address }));
           break;
         }
         case ProfileTab.sells: {

@@ -44,8 +44,7 @@ export const Header = () => {
 
   const { loading } = useAccount();
 
-  const { isConnected, address } = useReactWeb3();
-  console.log(address);
+  const { isConnected } = useReactWeb3();
   const dispatch = useDispatch();
   const { showWalletLogin: isConnectWalletOpen } = useSelector(
     (state: RootState) => state.user,
