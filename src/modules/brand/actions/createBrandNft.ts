@@ -27,6 +27,7 @@ export interface ICreateNFTPayload {
   channel: Channel;
   standard: NftType;
   supply: number;
+  points: number;
   file: File;
 }
 
@@ -41,38 +42,21 @@ export const useCreateBrandNFT = () => {
   >(undefined);
 
   const onCreate = async (
-    { file, standard, supply, name, description, channel }: ICreateNFTPayload,
+    {
+      file,
+      standard,
+      points,
+      supply,
+      name,
+      description,
+      channel,
+    }: ICreateNFTPayload,
     brandInfo?: IBrandInfo,
   ) => {
     const category = isVideo(file) ? 'video' : 'image';
-    const maxSupply = standard === NftType.ERC721 ? 1 : supply;
+    const maxSupply = supply ?? 0;
     const { data } = await dispatchRequest(uploadFile({ file }));
     const path = data?.result.path ?? '';
-    /* const brandid = brandInfo.id;
-    const collectionAddress = brandInfo.contractaddress;
-
-    const addItemPayload: IAddItemPayload = {
-      brandid,
-      category,
-      channel,
-      contractaddress: collectionAddress,
-      description,
-      fileurl: path,
-      itemname: name,
-      itemsymbol: brandInfo.brandsymbol,
-      owneraddress: brandInfo.owneraddress,
-      ownername: brandInfo.ownername,
-      standard: brandInfo.standard,
-      supply: maxSupply,
-    };
-
-    const { data: addItemData } = await dispatchRequest(
-      addItem(addItemPayload),
-    );
-
-    if (!addItemData) {
-      throw new Error("Item hasn't been added");
-    } */
 
     const creators = [
       new Creator({
@@ -91,7 +75,7 @@ export const useCreateBrandNFT = () => {
       symbol: brandInfo?.brandsymbol ?? '',
       creators,
       description,
-      sellerFeeBasisPoints: 0,
+      sellerFeeBasisPoints: points ?? 0,
       image: path ?? '',
       animation_url: undefined,
       attributes: attributes,

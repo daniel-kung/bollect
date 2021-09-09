@@ -35,6 +35,7 @@ export interface ICreateNFTPayload {
   channel: Channel;
   standard: NftType;
   supply: number;
+  points: number;
   file: File;
 }
 // TODO: Remove timers

@@ -8,6 +8,15 @@ import { RoutesConfiguration } from 'modules/createNFT/Routes';
 import { useExtendedArt } from 'modules/common/hooks/useArt';
 import { Img } from 'modules/uiKit/Img';
 import { uid } from 'react-uid';
+import { CSSProperties } from 'react';
+
+const styles: { [className in string]: CSSProperties } = {
+  root: {
+    border: '1px solid rgba(0,0,0,.1)',
+    padding: 20,
+    borderRadius: 15,
+  },
+};
 
 export const TabOwned: React.FC<{
   isOther?: boolean;
@@ -16,6 +25,7 @@ export const TabOwned: React.FC<{
 }> = function ({ isOther = false, address: artAddress, reload }) {
   const { data: list, loading } = useMintMetaData();
 
+  console.log('---list--', list);
   return (
     <ProductCards isLoading={loading}>
       {list.map(e => {
@@ -30,15 +40,10 @@ const Item: React.FC<{ item: IMyMintItem }> = ({ item }) => {
   const { data } = useExtendedArt(item.uri);
 
   return (
-    <div
-      style={{
-        border: '1px solid rgba(0,0,0,.1)',
-        padding: 20,
-        borderRadius: 15,
-      }}
-    >
+    <div style={styles.root}>
       <Img src={data?.image} />
       <h2>{item.name}</h2>
+      {/* TODO sold close and to detail */}
       <Button
         className={classes.saleBtn}
         component={RouterLink}

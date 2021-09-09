@@ -130,6 +130,9 @@
       "specific-time-sale": "Put on sale at a specific time",
       "standard": "Standard",
       "supply": "Supply",
+      "max-supply": "Max Supply",
+      "seller-fee-basis-points": "Royalty Percentage",
+      "seller-fee-basis-points-placeholder": "Between 0 and 100",
       "collection": "Collection"
     },
     "tip-warning": {
