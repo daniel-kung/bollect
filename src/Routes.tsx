@@ -26,11 +26,24 @@ import {
 } from './modules/overview/Routes';
 import { PageNotFound } from './modules/router/components/PageNotFound';
 import { Themes } from './modules/themes/types';
+import { DashBoard } from './modules/admin';
 
 export function Routes() {
   return (
     <Switch>
       <Route exact path="/" render={() => <Redirect to="/index" />} />
+
+      <Route
+        exact
+        path={'/admin'}
+        render={() => {
+          return (
+            <DefaultLayout headerTheme={Themes.dark}>
+              <DashBoard />
+            </DefaultLayout>
+          );
+        }}
+      />
 
       <Route
         exact

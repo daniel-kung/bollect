@@ -21,7 +21,7 @@ import {
   SafetyDepositConfig,
 } from '../../models/metaplex';
 import { AuctionManagerV1 } from '../../models/metaplex/deprecatedStates';
-import names from '../../modules/common/config/userNames.json';
+import names from '../../modules/admin/config/userNames.json';
 import { ProcessAccountsFunc } from './types';
 
 export const processMetaplexAccounts: ProcessAccountsFunc = async (

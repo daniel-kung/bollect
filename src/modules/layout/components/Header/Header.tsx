@@ -44,8 +44,7 @@ export const Header = () => {
 
   const { loading } = useAccount();
 
-  const { isConnected, address } = useReactWeb3();
-  console.log(address);
+  const { isConnected } = useReactWeb3();
   const dispatch = useDispatch();
   const { showWalletLogin: isConnectWalletOpen } = useSelector(
     (state: RootState) => state.user,
@@ -64,6 +63,7 @@ export const Header = () => {
       <Search className={classes.search} />
       <HeaderLinks />
       {featuresConfig.howItWorkPage && <HeaderLinksSecondary />}
+
       <Button
         rounded
         component={RouterLink}
