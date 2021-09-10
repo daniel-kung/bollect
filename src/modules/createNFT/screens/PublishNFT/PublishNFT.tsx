@@ -42,7 +42,7 @@ import {
 import { IItemRoyaltyRes } from 'modules/brand/components/RoyaltyDialog/action/fetchItemRoyalty';
 import { RenderRoyalty } from './Royalty';
 import { IPublishEnglishAuction, IPublishFixedSwap } from './types';
-import { putOnSaleBidSubmit } from './handleSubmit';
+import { usePutOnSaleBidSubmit } from './handleSubmit';
 
 const MIN_AMOUNT = 1;
 
@@ -75,6 +75,7 @@ export const PublishNFTComponent = ({
 }: IPublishNFTComponentProps) => {
   const classes = usePublishNFTtyles();
   const dispatch = useDispatchRequest();
+  const { handlePutOnSale } = usePutOnSaleBidSubmit();
   const [purchasePriceChecked, setPurchasePriceChecked] = useState(true);
   const [reservePriceChecked, setReservePriceChecked] = useState(true);
 
@@ -196,7 +197,7 @@ export const PublishNFTComponent = ({
   const handleSubmit = useCallback(
     (payload: IPublishNFTFormData) => {
       if (payload.type === AuctionType.EnglishAuction) {
-        putOnSaleBidSubmit({
+        handlePutOnSale({
           name,
           purchasePriceChecked,
           reservePriceChecked,
@@ -206,7 +207,14 @@ export const PublishNFTComponent = ({
         });
       }
     },
-    [name, purchasePriceChecked, reservePriceChecked, tokenContract, tokenId],
+    [
+      name,
+      purchasePriceChecked,
+      reservePriceChecked,
+      tokenContract,
+      tokenId,
+      handlePutOnSale,
+    ],
   );
 
   const isVerify = identity === UserRoleEnum.Verified;
