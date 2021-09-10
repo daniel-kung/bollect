@@ -7,7 +7,6 @@ import {
   useConnection,
 } from '@oyster/common';
 import { getProgramAccounts } from 'contexts/meta/loadAccounts';
-import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { METADATA_PROGRAM_ID } from '@oyster/common/dist/lib/utils/ids';
@@ -34,8 +33,7 @@ export interface IMyMintItem {
   pubkey: string;
 }
 
-export const useMintMetaData = () => {
-  const { address } = useReactWeb3();
+export const useMintMetaData = (address: string) => {
   const connection = useConnection();
   const [list, setList] = useState<IMyMintItem[]>([]);
   const [loading, setLoading] = useState(false);

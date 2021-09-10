@@ -118,7 +118,7 @@ export const CollectionNFTItems = ({
               <Paper className={classes.itemImgFrame} variant="outlined">
                 <Link
                   to={BuyNFTRoutesConfig.Details_ITEM_NFT.generatePath(
-                    tokenId,
+                    '---',
                     contractAddress,
                   )}
                 >

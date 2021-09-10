@@ -25,13 +25,7 @@ export const DashTable = ({ tableDatas }: IDashTableProps) => {
         </TableHead>
         <TableBody>
           {tableDatas.map(tableData => {
-            return (
-              <TableItemRow
-                name={tableData.name}
-                address={tableData.address}
-                isActivited={tableData.isActivited}
-              />
-            );
+            return <TableItemRow {...tableData} />;
           })}
         </TableBody>
       </Table>

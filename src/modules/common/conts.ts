@@ -1,3 +1,4 @@
+import { PublicKey } from '@solana/web3.js';
 import { ChainSymbol, TokenSymbol } from './types/TokenSymbol';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -181,3 +182,7 @@ export const DefaultChainId = BlockchainNetworkId.smartchain;
 
 export const getTokenSymbol = (chainId: BlockchainNetworkId) =>
   BlockChainTokenSymbol[chainId] || DefaultTokenSymbol;
+
+export const FANGIBLE_STORE: PublicKey = new PublicKey(
+  'Cx4Fe6WyRJopHVLLmYB9bnC8y2DnKbWX3cgRWc5dVvQS',
+);

@@ -3,19 +3,19 @@ import { TableCell, TableRow } from '@material-ui/core';
 export interface IDashBoardItemRow {
   name: string;
   address: string;
-  isActivited: boolean;
+  activated: boolean;
 }
 
 export const TableItemRow = ({
   name,
   address,
-  isActivited,
+  activated,
 }: IDashBoardItemRow) => {
   return (
     <TableRow>
       <TableCell>{name}</TableCell>
       <TableCell>{address}</TableCell>
-      <TableCell>{String(isActivited)}</TableCell>
+      <TableCell>{String(activated)}</TableCell>
     </TableRow>
   );
 };

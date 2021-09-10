@@ -66,6 +66,10 @@ export const HeaderLinks = () => {
         label: t('header.market'),
         href: MarketRoutesConfig.Market.generatePath(),
       },
+      {
+        label: 'DashBoard',
+        href: '/admin',
+      },
     ],
     [],
   );

@@ -106,10 +106,10 @@ export const Profile = () => {
 
   const onTabsChange = useCallback(
     (_, value) => {
-      push(ProfileRoutesConfig.UserProfile.generatePath(value));
+      push(ProfileRoutesConfig.UserProfile.generatePath(address, value));
       updateData(value);
     },
-    [push, updateData],
+    [push, updateData, address],
   );
 
   useEffect(() => {
@@ -247,7 +247,9 @@ export const Profile = () => {
         </Tabs>
 
         <TabPanel value={tab} index={ProfileTab.owned}>
-          <TabOwned address={address} reload={reload(ProfileTab.owned)} />
+          {address && (
+            <TabOwned address={address} reload={reload(ProfileTab.owned)} />
+          )}
         </TabPanel>
 
         {/* <TabPanel value={tab} index={ProfileTab.collections}>

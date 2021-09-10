@@ -3,12 +3,14 @@ import { useProductCardStyles } from 'modules/common/components/ProductCard/useP
 import { ProductCards } from 'modules/common/components/ProductCards';
 import { t } from 'modules/i18n/utils/intl';
 import { IMyMintItem, useMintMetaData } from 'modules/profile/hooks/useMyMint';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link, Link as RouterLink } from 'react-router-dom';
 import { RoutesConfiguration } from 'modules/createNFT/Routes';
 import { useExtendedArt } from 'modules/common/hooks/useArt';
 import { Img } from 'modules/uiKit/Img';
 import { uid } from 'react-uid';
 import { CSSProperties } from 'react';
+import { BuyNFTRoutesConfig } from 'modules/buyNFT/BuyNFTRoutes';
+import { cacheData } from '../../cacheData';
 
 const styles: { [className in string]: CSSProperties } = {
   root: {
@@ -20,28 +22,46 @@ const styles: { [className in string]: CSSProperties } = {
 
 export const TabOwned: React.FC<{
   isOther?: boolean;
-  address?: string;
+  address: string;
   reload?: () => void;
 }> = function ({ isOther = false, address: artAddress, reload }) {
-  const { data: list, loading } = useMintMetaData();
+  const { data: list, loading } = useMintMetaData(artAddress);
 
-  console.log('---list--', list);
   return (
     <ProductCards isLoading={loading}>
       {list.map(e => {
-        return <Item key={uid(e)} item={e} />;
+        return <Item key={uid(e)} item={e} artAddress={artAddress} />;
       })}
     </ProductCards>
   );
 };
 
-const Item: React.FC<{ item: IMyMintItem }> = ({ item }) => {
+const Item: React.FC<{ item: IMyMintItem; artAddress: string }> = ({
+  item,
+  artAddress,
+}) => {
   const classes = useProductCardStyles();
   const { data } = useExtendedArt(item.uri);
 
+  // 组装数据进行缓存
+  if (artAddress) {
+    cacheData({
+      ownerPublic: artAddress,
+      accountInfo: item,
+      metaData: data,
+    });
+  }
+
   return (
     <div style={styles.root}>
-      <Img src={data?.image} />
+      <Link
+        to={BuyNFTRoutesConfig.Details_ITEM_NFT.generatePath(
+          artAddress,
+          item.pubkey,
+        )}
+      >
+        <Img src={data?.image} />
+      </Link>
       <h2>{item.name}</h2>
       {/* TODO sold close and to detail */}
       <Button

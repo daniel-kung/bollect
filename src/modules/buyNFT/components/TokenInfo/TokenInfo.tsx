@@ -9,7 +9,7 @@ import { useTokenInfoStyles } from './useTokenInfoStyles';
 interface ITokenInfoProps {
   name: string;
   itemSymbol: 'BOUNCE';
-  standard: NftType;
+  standard?: NftType;
   contractAddress: string;
   supply: number;
   tokenId: number;

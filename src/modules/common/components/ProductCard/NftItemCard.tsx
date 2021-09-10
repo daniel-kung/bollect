@@ -30,7 +30,7 @@ export const NftItemCard = ({
       isItemType
       title={item.name}
       href={BuyNFTRoutesConfig.Details_ITEM_NFT.generatePath(
-        item.tokenId,
+        '---',
         item.contractAddress,
       )}
       contractAddress={item.contractAddress}

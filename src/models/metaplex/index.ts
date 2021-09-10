@@ -18,6 +18,7 @@ import { AccountInfo, SystemProgram } from '@solana/web3.js';
 import BN from 'bn.js';
 import { deserializeUnchecked } from 'borsh';
 import bs58 from 'bs58';
+import { FANGIBLE_STORE } from 'modules/common/conts';
 import { AuctionViewItem } from 'modules/common/hooks/useAuctions';
 import {
   AuctionManagerV1,
@@ -1089,7 +1090,7 @@ export async function getOriginalAuthority(
 
 export async function getWhitelistedCreator(creator: string) {
   const PROGRAM_IDS = programIds();
-  const store = PROGRAM_IDS.store;
+  const store = FANGIBLE_STORE;
   if (!store) {
     throw new Error('Store not initialized');
   }
@@ -1112,7 +1113,7 @@ export async function getPrizeTrackingTicket(
   mint: string,
 ) {
   const PROGRAM_IDS = programIds();
-  const store = PROGRAM_IDS.store;
+  const store = FANGIBLE_STORE;
   if (!store) {
     throw new Error('Store not initialized');
   }
@@ -1132,7 +1133,7 @@ export async function getPrizeTrackingTicket(
 
 export async function getAuctionWinnerTokenTypeTracker(auctionManager: string) {
   const PROGRAM_IDS = programIds();
-  const store = PROGRAM_IDS.store;
+  const store = FANGIBLE_STORE;
   if (!store) {
     throw new Error('Store not initialized');
   }
@@ -1155,7 +1156,7 @@ export async function getSafetyDepositConfig(
   safetyDeposit: string,
 ) {
   const PROGRAM_IDS = programIds();
-  const store = PROGRAM_IDS.store;
+  const store = FANGIBLE_STORE;
   if (!store) {
     throw new Error('Store not initialized');
   }

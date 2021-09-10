@@ -61,7 +61,7 @@ const ItemIcon: React.FC<IItemProps> = ({
       className={styles.tableItemIcon}
       target={target}
       to={BuyNFTRoutesConfig.Details_ITEM_NFT.generatePath(
-        tokenid,
+        '---',
         contractaddress,
       )}
     >
@@ -84,7 +84,7 @@ const ItemVideo: React.FC<IItemProps> = ({
       className={styles.tableItemVideo}
       target={target}
       to={BuyNFTRoutesConfig.Details_ITEM_NFT.generatePath(
-        tokenid,
+        '---',
         contractaddress,
       )}
     >
