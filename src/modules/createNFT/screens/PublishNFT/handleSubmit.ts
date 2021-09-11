@@ -6,7 +6,7 @@ import {
   WinnerLimit,
   WinnerLimitType,
   WRAPPED_SOL_MINT,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';

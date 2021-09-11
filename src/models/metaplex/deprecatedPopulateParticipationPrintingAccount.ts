@@ -5,7 +5,7 @@ import {
   findProgramAddress,
   StringPublicKey,
   toPublicKey,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { SYSVAR_RENT_PUBKEY, TransactionInstruction } from '@solana/web3.js';
 import { serialize } from 'borsh';
 

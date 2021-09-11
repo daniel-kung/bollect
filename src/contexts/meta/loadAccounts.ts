@@ -5,7 +5,7 @@ import {
   StringPublicKey,
   toPublicKey,
   VAULT_ID,
-} from '@oyster/common/dist/lib/utils/ids';
+} from 'npms/oystoer';
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import { AccountAndPubkey, MetaState, ProcessAccountsFunc } from './types';
 import { isMetadataPartOfStore } from './isMetadataPartOfStore';
@@ -24,7 +24,7 @@ import {
   Metadata,
   METADATA_PREFIX,
   ParsedAccount,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { MAX_WHITELISTED_CREATOR_SIZE } from '../../models/metaplex';
 
 export async function getProgramAccounts(

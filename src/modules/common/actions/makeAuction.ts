@@ -8,7 +8,7 @@ import {
   StringPublicKey,
   toPublicKey,
   WalletSigner,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 
 const { AUCTION_PREFIX, createAuction } = actions;

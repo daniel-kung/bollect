@@ -1,8 +1,4 @@
-import {
-  getTokenName,
-  getVerboseTokenName,
-  KnownTokenMap,
-} from '@oyster/common';
+import { getTokenName, getVerboseTokenName, KnownTokenMap } from 'npms/oystoer';
 import { TokenInfo } from '@solana/spl-token-registry';
 
 export const LAMPORT_MULTIPLIER = 10 ** 9;

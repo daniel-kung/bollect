@@ -8,7 +8,7 @@ import {
   StringPublicKey,
   toPublicKey,
   WalletSigner,
-} from '@oyster/common';
+} from 'npms/oystoer';
 
 import { AccountLayout } from '@solana/spl-token';
 import BN from 'bn.js';

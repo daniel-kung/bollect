@@ -1,4 +1,4 @@
-import { programIds, cache, ParsedAccount, METAPLEX_ID } from '@oyster/common';
+import { programIds, cache, ParsedAccount, METAPLEX_ID } from 'npms/oystoer';
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import {
   AuctionManagerV2,

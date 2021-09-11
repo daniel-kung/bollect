@@ -3,7 +3,7 @@ import {
   deprecatedCreateReservationList,
   StringPublicKey,
   WalletSigner,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { SafetyDepositInstructionTemplate } from './addTokensToVault';
 import { WinningConfigType } from 'models/metaplex';

@@ -13,7 +13,7 @@ import {
   MAX_AUCTION_DATA_EXTENDED_SIZE,
   AuctionDataExtendedParser,
   AUCTION_ID,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { CheckAccountFunc, ProcessAccountsFunc } from './types';
 
 export const processAuctions: ProcessAccountsFunc = (

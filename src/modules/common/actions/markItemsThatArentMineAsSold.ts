@@ -1,8 +1,5 @@
 import { Keypair, TransactionInstruction } from '@solana/web3.js';
-import {
-  updatePrimarySaleHappenedViaToken,
-  WalletSigner,
-} from '@oyster/common';
+import { updatePrimarySaleHappenedViaToken, WalletSigner } from 'npms/oystoer';
 import { SafetyDepositDraft } from './createAuctionManager';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 const SALE_TRANSACTION_SIZE = 10;

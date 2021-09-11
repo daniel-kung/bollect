@@ -11,7 +11,7 @@ import {
   MasterEditionV1,
   MasterEditionV2,
   PublicKeyStringAndAccount,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { AccountInfo } from '@solana/web3.js';
 import {
   BidRedemptionTicket,

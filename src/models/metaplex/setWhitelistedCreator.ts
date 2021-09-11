@@ -1,4 +1,4 @@
-import { programIds, StringPublicKey, toPublicKey } from '@oyster/common';
+import { programIds, StringPublicKey, toPublicKey } from 'npms/oystoer';
 import { SYSVAR_RENT_PUBKEY, TransactionInstruction } from '@solana/web3.js';
 import { serialize } from 'borsh';
 

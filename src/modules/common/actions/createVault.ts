@@ -12,7 +12,7 @@ import {
   StringPublicKey,
   toPublicKey,
   WalletSigner,
-} from '@oyster/common';
+} from 'npms/oystoer';
 
 import { AccountLayout, MintLayout } from '@solana/spl-token';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';

@@ -1,4 +1,4 @@
-import { Metadata, ParsedAccount } from '@oyster/common';
+import { Metadata, ParsedAccount } from 'npms/oystoer';
 import { Store, WhitelistedCreator } from '../../models/metaplex';
 
 export const isMetadataPartOfStore = (

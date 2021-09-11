@@ -25,7 +25,6 @@ export const TabOwned: React.FC<{
 }> = function ({ isOther = false, address: artAddress, reload }) {
   const { data: list, loading } = useMintMetaData();
 
-  console.log('---list--', list);
   return (
     <ProductCards isLoading={loading}>
       {list.map(e => {

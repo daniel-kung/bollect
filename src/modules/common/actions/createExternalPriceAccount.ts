@@ -11,7 +11,7 @@ import {
   toPublicKey,
   WalletSigner,
   WRAPPED_SOL_MINT,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import BN from 'bn.js';
 

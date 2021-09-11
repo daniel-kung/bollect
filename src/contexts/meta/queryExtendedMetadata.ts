@@ -4,7 +4,7 @@ import {
   cache,
   MintParser,
   ParsedAccount,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { MintInfo } from '@solana/spl-token';
 import { Connection } from '@solana/web3.js';
 
