@@ -1,5 +1,6 @@
 import {
   IPartialCreateAuctionArgs,
+  ParsedAccount,
   PriceFloor,
   PriceFloorType,
   useConnection,
@@ -12,8 +13,13 @@ import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
 import BN from 'bn.js';
 import { IPublishEnglishAuction } from './types';
-import { createAuctionManager } from 'modules/common/actions/createAuctionManager';
+import {
+  createAuctionManager,
+  SafetyDepositDraft,
+} from 'modules/common/actions/createAuctionManager';
 import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
+import { storeWhiteCreatorsType } from 'modules/common/store/user';
+import { WhitelistedCreator } from 'models/metaplex';
 const MIN_INCREMENTAL_PART = 0.05;
 
 export const usePutOnSaleBidSubmit = () => {
@@ -28,6 +34,8 @@ export const usePutOnSaleBidSubmit = () => {
     reservePriceChecked,
     tokenContract,
     tokenId,
+    storeWhiteCreators,
+    attributesItems,
   }: {
     name: string;
     purchasePriceChecked: boolean;
@@ -35,6 +43,8 @@ export const usePutOnSaleBidSubmit = () => {
     tokenContract: string;
     tokenId: string;
     payload: IPublishEnglishAuction;
+    storeWhiteCreators: storeWhiteCreatorsType;
+    attributesItems: SafetyDepositDraft[];
   }) => {
     const params = {
       type: payload.type,
@@ -56,7 +66,6 @@ export const usePutOnSaleBidSubmit = () => {
       saleTime: payload.saleTimeEA,
     };
     console.log('---handleSubmit---', params);
-    // TODO
 
     const winnerLimit = new WinnerLimit({
       type: WinnerLimitType.Capped,
@@ -78,8 +87,17 @@ export const usePutOnSaleBidSubmit = () => {
       tickSize: null,
     };
 
-    const attributesItems: any[] = [];
-    const whitelistedCreatorsByCreator: any = {};
+    const whitelistedCreatorsByCreator: Record<
+      string,
+      ParsedAccount<WhitelistedCreator>
+    > = {};
+    storeWhiteCreators.forEach(e => {
+      whitelistedCreatorsByCreator[e.address] = e.account;
+    });
+    console.log(
+      'whitelistedCreatorsByCreator----->',
+      whitelistedCreatorsByCreator,
+    );
     const _auctionObj = await createAuctionManager(
       connection,
       {

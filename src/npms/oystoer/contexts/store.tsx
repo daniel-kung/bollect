@@ -7,7 +7,6 @@ import React, {
   useMemo,
 } from 'react';
 import { setProgramIds, StringPublicKey } from '../utils';
-import { useQuerySearch } from '../hooks';
 
 interface StoreConfig {
   // Store Address
@@ -26,8 +25,7 @@ export const StoreProvider: FC<{
   ownerAddress?: string;
   storeAddress?: string;
 }> = ({ children, ownerAddress, storeAddress }) => {
-  const searchParams = useQuerySearch();
-  const ownerAddressFromQuery = searchParams.get('store');
+  const ownerAddressFromQuery = undefined;
 
   const initOwnerAddress = ownerAddressFromQuery || ownerAddress;
   const initStoreAddress = !ownerAddressFromQuery ? storeAddress : undefined;

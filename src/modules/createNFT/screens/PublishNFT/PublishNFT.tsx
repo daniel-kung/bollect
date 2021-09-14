@@ -9,7 +9,7 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { Mutation, useDispatchRequest } from '@redux-requests/react';
+import { useDispatchRequest } from '@redux-requests/react';
 import BigNumber from 'bignumber.js';
 import { add } from 'date-fns';
 import { SelectTimeField } from '../../../form/components/SelectTimeField';
@@ -31,8 +31,10 @@ import { OnChange } from '../../../form/utils/OnChange';
 import { t } from '../../../i18n/utils/intl';
 import { GoBack } from '../../../layout/components/GoBack';
 import { fetchCurrency } from '../../../overview/actions/fetchCurrency';
-import { ProfileRoutesConfig } from '../../../profile/ProfileRoutes';
-import { publishNft } from '../../actions/publishNft';
+import {
+  ProfileRoutesConfig,
+  ProfileTab,
+} from '../../../profile/ProfileRoutes';
 import { useCurrencies } from '../../hooks/useCurrencies';
 import { usePublishNFTtyles } from './usePublishNFTtyles';
 import {
@@ -43,6 +45,14 @@ import { IItemRoyaltyRes } from 'modules/brand/components/RoyaltyDialog/action/f
 import { RenderRoyalty } from './Royalty';
 import { IPublishEnglishAuction, IPublishFixedSwap } from './types';
 import { usePutOnSaleBidSubmit } from './handleSubmit';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
+import { accountGetMasterEditionInfo } from 'modules/common/utils/solanaAccount';
+import { decodeMetadata, useConnection } from 'npms/oystoer';
+import { PublicKey } from '@solana/web3.js';
+import { AmountRange, WinningConfigType } from 'models/metaplex';
+import BN from 'bn.js';
+import { TokenSymbol } from 'modules/common/types/TokenSymbol';
 
 const MIN_AMOUNT = 1;
 
@@ -75,9 +85,15 @@ export const PublishNFTComponent = ({
 }: IPublishNFTComponentProps) => {
   const classes = usePublishNFTtyles();
   const dispatch = useDispatchRequest();
+  const { push } = useHistory();
+  const connection = useConnection();
   const { handlePutOnSale } = usePutOnSaleBidSubmit();
   const [purchasePriceChecked, setPurchasePriceChecked] = useState(true);
   const [reservePriceChecked, setReservePriceChecked] = useState(true);
+  const storeWhiteCreators = useSelector(
+    (state: RootState) => state.user.storeWhiteCreators,
+  );
+  const [loading, setLoading] = useState(false);
 
   const togglePurchasePriceChecked = useCallback(() => {
     setPurchasePriceChecked(prev => !prev);
@@ -195,25 +211,69 @@ export const PublishNFTComponent = ({
   );
 
   const handleSubmit = useCallback(
-    (payload: IPublishNFTFormData) => {
-      if (payload.type === AuctionType.EnglishAuction) {
-        handlePutOnSale({
+    async (payload: IPublishNFTFormData) => {
+      setLoading(true);
+      const metadataAccount = await connection.getAccountInfo(
+        new PublicKey(tokenId),
+      );
+      const masterEdition = await accountGetMasterEditionInfo({
+        publicKey: tokenId,
+        connection,
+      });
+      if (
+        payload.type === AuctionType.EnglishAuction &&
+        metadataAccount?.data
+      ) {
+        const auctionObj = await handlePutOnSale({
           name,
           purchasePriceChecked,
           reservePriceChecked,
           tokenContract,
           tokenId,
           payload,
+          storeWhiteCreators,
+          attributesItems: [
+            {
+              masterEdition: masterEdition
+                ? {
+                    info: masterEdition.masterEditionAccountData,
+                    pubkey: tokenId,
+                    account: masterEdition.masterEditionAccount,
+                  }
+                : undefined,
+              // TODO edition
+              // edition: {},
+              metadata: {
+                info: decodeMetadata(metadataAccount.data),
+                pubkey: tokenId,
+                account: metadataAccount,
+              },
+              holding: tokenId,
+              winningConfigType: WinningConfigType.FullRightsTransfer,
+              amountRanges: [
+                new AmountRange({
+                  amount: new BN(1),
+                  length: new BN(1),
+                }),
+              ],
+            },
+          ],
         });
+        console.log('auctionObj------>', auctionObj);
+        push(ProfileRoutesConfig.UserProfile.generatePath(ProfileTab.sells));
       }
+      setLoading(false);
     },
     [
+      connection,
+      tokenId,
+      handlePutOnSale,
       name,
       purchasePriceChecked,
       reservePriceChecked,
       tokenContract,
-      tokenId,
-      handlePutOnSale,
+      storeWhiteCreators,
+      push,
     ],
   );
 
@@ -270,14 +330,7 @@ export const PublishNFTComponent = ({
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <Field
-                          component={SelectField}
-                          name="unitContract"
-                          color="primary"
-                          fullWidth={true}
-                          options={currencyOptions}
-                          className={classes.currencySelect}
-                        />
+                        {TokenSymbol.SOLANA}
                       </InputAdornment>
                     ),
                   }}
@@ -474,15 +527,9 @@ export const PublishNFTComponent = ({
           {RoyaltyData && <RenderRoyalty RoyaltyData={RoyaltyData} />}
 
           <Box>
-            <Mutation type={publishNft.toString()}>
-              {({ loading }) => (
-                <Button size="large" type="submit" fullWidth loading={loading}>
-                  {loading
-                    ? t('publish-nft.submitting')
-                    : t('publish-nft.submit')}
-                </Button>
-              )}
-            </Mutation>
+            <Button size="large" type="submit" fullWidth loading={loading}>
+              {loading ? t('publish-nft.submitting') : t('publish-nft.submit')}
+            </Button>
           </Box>
         </div>
       </Box>

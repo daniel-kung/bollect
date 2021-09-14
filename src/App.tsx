@@ -1,6 +1,8 @@
 import { NoSsr } from '@material-ui/core';
 import { ScrollToTop } from 'modules/common/components/ScrollToTop';
+import { FANGIBLE_STORE } from 'modules/common/conts';
 import { Update } from 'modules/layout/components/Update/update';
+import { StoreProvider } from 'npms/oystoer';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -14,15 +16,17 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={<QueryLoadingAbsolute />} persistor={persistor}>
-        <AppBase>
-          <Update>
-            <ScrollToTop />
-            <Routes />
-            <NoSsr>
-              <Notifications />
-            </NoSsr>
-          </Update>
-        </AppBase>
+        <StoreProvider storeAddress={FANGIBLE_STORE}>
+          <AppBase>
+            <Update>
+              <ScrollToTop />
+              <Routes />
+              <NoSsr>
+                <Notifications />
+              </NoSsr>
+            </Update>
+          </AppBase>
+        </StoreProvider>
       </PersistGate>
     </Provider>
   );
