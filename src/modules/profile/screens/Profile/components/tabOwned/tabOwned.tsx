@@ -70,7 +70,7 @@ const Item: React.FC<{ item: IMyMintItem; artAddress: string }> = ({
         variant="outlined"
         rounded
         to={RoutesConfiguration.PublishNft.generatePath(
-          'contractaddress',
+          'todoContractAddress',
           item.pubkey,
         )}
       >

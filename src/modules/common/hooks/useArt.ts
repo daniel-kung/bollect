@@ -9,7 +9,7 @@ import {
   Metadata,
   ParsedAccount,
   StringPublicKey,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { WhitelistedCreator } from 'models/metaplex';
 import { Cache } from 'three';
 

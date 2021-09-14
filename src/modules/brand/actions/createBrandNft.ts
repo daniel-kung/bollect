@@ -3,7 +3,7 @@ import {
   StringPublicKey,
   useConnectionConfig,
   Creator,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { DispatchRequest, RequestAction } from '@redux-requests/core';
 import { useDispatchRequest } from '@redux-requests/react';
 // import { useDispatchRequest } from '@redux-requests/react';

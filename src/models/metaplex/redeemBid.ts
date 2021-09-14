@@ -4,7 +4,7 @@ import {
   StringPublicKey,
   toPublicKey,
   VAULT_PREFIX,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import {
   SystemProgram,
   SYSVAR_RENT_PUBKEY,

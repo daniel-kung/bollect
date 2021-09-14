@@ -119,6 +119,7 @@ export const CreateNFT = () => {
         setLoading(false);
         push(ProfileRoutesConfig.UserProfile.generatePath(ProfileTab.owned));
       } catch (error) {
+        console.info(error);
         setLoading(false);
         storeDispatch(
           NotificationActions.showNotification({

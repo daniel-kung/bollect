@@ -4,7 +4,7 @@ import {
   findProgramAddress,
   StringPublicKey,
   toPublicKey,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import {
   SystemProgram,
   SYSVAR_RENT_PUBKEY,

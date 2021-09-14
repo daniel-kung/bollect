@@ -4,12 +4,12 @@ import {
   MAX_NAME_LENGTH,
   MAX_SYMBOL_LENGTH,
   MAX_URI_LENGTH,
+  METADATA_PROGRAM_ID,
   useConnection,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { getProgramAccounts } from 'contexts/meta/loadAccounts';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { METADATA_PROGRAM_ID } from '@oyster/common/dist/lib/utils/ids';
 
 const offset =
   1 + // key

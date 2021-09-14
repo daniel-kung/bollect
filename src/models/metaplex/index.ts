@@ -13,7 +13,7 @@ import {
   MasterEditionV2,
   toPublicKey,
   StringPublicKey,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { AccountInfo, SystemProgram } from '@solana/web3.js';
 import BN from 'bn.js';
 import { deserializeUnchecked } from 'borsh';

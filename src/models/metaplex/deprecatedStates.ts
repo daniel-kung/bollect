@@ -1,4 +1,4 @@
-import { programIds, findProgramAddress, toPublicKey } from '@oyster/common';
+import { programIds, findProgramAddress, toPublicKey } from 'npms/oystoer';
 import BN from 'bn.js';
 import {
   AuctionManagerStatus,

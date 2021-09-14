@@ -5,8 +5,8 @@ import {
   decodeSafetyDeposit,
   decodeVault,
   Vault,
-} from '@oyster/common';
-import { VAULT_ID } from '@oyster/common/dist/lib/utils/ids';
+  VAULT_ID,
+} from 'npms/oystoer';
 import { AccountInfo } from '@solana/web3.js';
 import { ProcessAccountsFunc } from './types';
 

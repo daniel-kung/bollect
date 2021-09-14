@@ -7,7 +7,7 @@ import {
   METADATA_PROGRAM_ID,
   toPublicKey,
   useQuerySearch,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import React, {
   useCallback,
   useContext,

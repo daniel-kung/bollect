@@ -15,7 +15,7 @@ import {
   toPublicKey,
   WalletSigner,
   Attribute,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import React from 'react';
 import { MintLayout, Token } from '@solana/spl-token';
 import { Keypair, Connection, TransactionInstruction } from '@solana/web3.js';

@@ -10,7 +10,7 @@ import {
   MasterEditionV1,
   MasterEditionV2,
   StringPublicKey,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import BN from 'bn.js';
 import { useMeta } from 'contexts';
 import { useEffect, useState } from 'react';

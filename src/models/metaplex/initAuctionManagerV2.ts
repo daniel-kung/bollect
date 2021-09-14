@@ -1,4 +1,4 @@
-import { programIds, StringPublicKey, toPublicKey } from '@oyster/common';
+import { programIds, StringPublicKey, toPublicKey } from 'npms/oystoer';
 import {
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
