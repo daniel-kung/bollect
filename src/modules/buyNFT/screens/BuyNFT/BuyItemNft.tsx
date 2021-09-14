@@ -27,7 +27,7 @@ export const BuyItemNFT = () => {
 
   const renderedTokenInfoList = (
     <InfoTabsList>
-      <ScanBtn contractAddress={''} />
+      <ScanBtn contractAddress={nftInfo?.pubkey || ''} />
 
       <TokenInfo
         name={nftInfo?.name || ''}
@@ -75,107 +75,3 @@ export const BuyItemNFT = () => {
     // eslint-disable-next-line
   }, [nftInfo]);
 };
-
-// { renderMedia() }
-/* <Info className={classes.info}>
-      <InfoDescr
-        title={item.itemName}
-        description={item.description}
-        // copiesCurrent={item.balance}
-        currentPage="itemDetail"
-        copiesTotal={item.supply}
-        creator={renderedCreator}
-        owner={renderedCollection()}
-        LikeBtn={<></>}
-      />
-      <InfoTabs
-        tabs={[NftInfoOwnersOption, NftInfoDetailOption]}
-        tokenInfo={renderedTokenInfoList}
-        owners={<RenderedDetailOwnersList list={poolNftOwner} />}
-      />
-    </Info> */
-// </div >
-// <Queries<
-//   ResponseData<typeof fetchItem>,
-//   ResponseData<typeof fetchItem2>,
-//   ResponseData<typeof fetchPoolNftOwner>
-// >
-//   requestActions={[fetchItem, fetchItem2, fetchPoolNftOwner]}
-//   noDataMessage={<BuyNFTSkeleton />}
-// >
-//   {({ data: item }, { data: poolDetails }, { data: poolNftOwner }) => {
-// const renderedCreator = (
-//   <ProfileInfo
-//     key={uid(item)}
-//     subTitle={t('details-nft.role.minter')}
-//     title={wrapperTitle(
-//       poolDetails?.minter?.username,
-//       poolDetails?.minter?.address,
-//     )}
-//     users={[
-//       {
-//         name: wrapperTitle(
-//           poolDetails?.minter?.username,
-//           poolDetails?.minter?.address,
-//         ),
-//         href: ProfileRoutesConfig.OtherProfile.generatePath(
-//           poolDetails?.minter?.address,
-//         ),
-//         avatar: poolDetails?.minter?.avatar,
-//         verified: item?.identity === UserRoleEnum.Verified,
-//       },
-//     ]}
-//   />
-// );
-// const shieldNameList = ['', 'BOUNCE'];
-// const renderedCollection = () => {
-//   return !shieldNameList.includes(
-//     poolDetails?.collection.name || '',
-//   ) ? (
-//     <>
-//       {poolDetails?.collection?.address && (
-//         <ProfileInfo
-//           subTitle={t('details-nft.role.collection')}
-//           title={wrapperTitle(
-//             poolDetails.collection.name,
-//             poolDetails.collection.address,
-//           )}
-//           users={[
-//             {
-//               name: poolDetails.collection.name,
-//               avatar: poolDetails.collection.avatar,
-//               href: ProfileRoutesConfig.Collection.generatePath(
-//                 poolDetails.collection.address,
-//               ),
-//               verified: item?.identity === UserRoleEnum.Verified,
-//             },
-//           ]}
-//         />
-//       )}
-//     </>
-//   ) : (
-//     <></>
-//   );
-// };
-
-// const renderedTokenInfoList = (
-//   <InfoTabsList>
-//     <ScanBtn contractAddress={item.contractAddress} />
-//     <TokenInfo
-//       name={item.itemName}
-//       itemSymbol={item.itemSymbol}
-//       standard={item.standard}
-//       contractAddress={item.contractAddress}
-//       supply={item.supply}
-//       tokenId={item.id}
-//     />
-//   </InfoTabsList>
-// );
-
-//     return (
-
-//     );
-//   }}
-// </Queries>
-//   );
-// };

@@ -133,6 +133,8 @@ export const useAuctions = (state?: AuctionViewState) => {
     bidRedemptionV2sByAuctionManagerAndWinningIndex,
   } = useMeta();
 
+  console.log('auctions--->', auctions);
+
   useEffect(() => {
     const map = Object.keys(auctions).reduce((agg, a) => {
       const auction = auctions[a];

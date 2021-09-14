@@ -27,6 +27,7 @@ import {
   metadataByMintUpdater,
 } from './loadAccounts';
 import { onChangeAccount } from './onChangeAccount';
+import { FANGIBLE_STORE } from 'modules/common/conts';
 
 const MetaContext = React.createContext<MetaContextState>({
   metadata: [],
@@ -56,9 +57,13 @@ const MetaContext = React.createContext<MetaContextState>({
 
 export function MetaProvider({ children = null as any }) {
   const connection = useConnection();
-  const { isReady, storeAddress } = useStore();
+  // const { isReady, storeAddress } = useStore();
+  const isReady = true;
+  const storeAddress = FANGIBLE_STORE.toString();
   const searchParams = useQuerySearch();
   const all = searchParams.get('all') === 'true';
+  alert(isReady);
+  alert(storeAddress);
 
   const [state, setState] = useState<MetaState>({
     metadata: [],

@@ -21,9 +21,21 @@ import { Pagination } from '../../../uiKit/Pagination';
 import { useProductsStyles } from './useProductsStyles';
 import { MarketNftCard } from './nftCard';
 import { uid } from 'react-uid';
+import {
+  AuctionViewState,
+  useAuctions,
+} from 'modules/common/hooks/useAuctions';
+import { useMarketList } from 'modules/market/actions/useMarketList';
 
 const ITEMS_PORTION_COUNT = 20;
 const DEFAULT_PAGE = 1;
+
+export enum LiveAuctionViewState {
+  All = '0',
+  Participated = '1',
+  Ended = '2',
+  Resale = '3',
+}
 
 export const Products = ({ ...sectionProps }: ISectionProps) => {
   const dispatchRequest = useDispatchRequest();
@@ -34,13 +46,18 @@ export const Products = ({ ...sectionProps }: ISectionProps) => {
   const isMobile = useIsSMDown();
   const classes = useProductsStyles();
   const { isConnected } = useAccount();
+  // 获取市场列表数据
+  // const {} = useMarketList()
 
-  const {
-    data: nftItemsData,
-    loading: nftItemsLoading,
-  } = useQuery<IFetchNFTItems | null>({
-    type: fetchNFTItems.toString(),
-  });
+  // const auctions = useAuctions(AuctionViewState.Live);
+  // const auctionsEnded = useAuctions(AuctionViewState.Ended);
+
+  // console.log('auctions', auctions, auctionsEnded)
+
+  const { data: nftItemsData, loading: nftItemsLoading } =
+    useQuery<IFetchNFTItems | null>({
+      type: fetchNFTItems.toString(),
+    });
 
   const onCategoryChange = (value: string) => {
     history.push(MarketRoutesConfig.Market.generatePath(DEFAULT_PAGE, value));
@@ -69,9 +86,10 @@ export const Products = ({ ...sectionProps }: ISectionProps) => {
     };
   }, [category, page, dispatch, isConnected, dispatchRequest]);
 
-  const nftItems = useMemo(() => (nftItemsData ? nftItemsData.items : []), [
-    nftItemsData,
-  ]);
+  const nftItems = useMemo(
+    () => (nftItemsData ? nftItemsData.items : []),
+    [nftItemsData],
+  );
 
   const pagesCount = useMemo(() => {
     if (!nftItemsData) {
