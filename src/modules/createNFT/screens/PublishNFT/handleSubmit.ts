@@ -111,7 +111,6 @@ export const usePutOnSaleBidSubmit = () => {
       undefined,
       WRAPPED_SOL_MINT.toBase58(),
     ]);
-    debugger;
 
     const _auctionObj = await createAuctionManager(
       connection,
