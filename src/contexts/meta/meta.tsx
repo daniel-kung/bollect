@@ -6,6 +6,7 @@ import {
   METADATA_PROGRAM_ID,
   toPublicKey,
   useQuerySearch,
+  programIds,
 } from 'npms/oystoer';
 import React, {
   useCallback,
@@ -26,7 +27,6 @@ import {
   metadataByMintUpdater,
 } from './loadAccounts';
 import { onChangeAccount } from './onChangeAccount';
-import { FANGIBLE_STORE } from 'modules/common/conts';
 
 const MetaContext = React.createContext<MetaContextState>({
   metadata: [],
@@ -56,9 +56,9 @@ const MetaContext = React.createContext<MetaContextState>({
 
 export function MetaProvider({ children = null as any }) {
   const connection = useConnection();
-  // const { isReady, storeAddress } = useStore();
+  const PROGRAM_IDS = programIds();
   const isReady = true;
-  const storeAddress = FANGIBLE_STORE.toString();
+  const storeAddress = PROGRAM_IDS.store;
   const searchParams = useQuerySearch();
   const all = searchParams.get('all') === 'true';
   alert(isReady);

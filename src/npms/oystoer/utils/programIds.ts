@@ -1,4 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
+import { FANGIBLE_STORE } from 'modules/common/conts';
 import {
   METADATA_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
@@ -31,14 +32,10 @@ import {
 // };
 
 export const setProgramIds = async (store?: string) => {
-  STORE = store
-    ? toPublicKey(store)
-    : toPublicKey('GyJHjdqFjeN7xyCrUiG9hngN2rigq49Qka7G7mytYPX1');
+  STORE = store ? toPublicKey(store) : toPublicKey(FANGIBLE_STORE);
 };
 
-let STORE: PublicKey | undefined = toPublicKey(
-  'GyJHjdqFjeN7xyCrUiG9hngN2rigq49Qka7G7mytYPX1',
-);
+let STORE: PublicKey | undefined = toPublicKey(FANGIBLE_STORE);
 
 export const programIds = () => {
   return {

@@ -1,7 +1,6 @@
 import { programIds, StringPublicKey, toPublicKey } from 'npms/oystoer';
 import { SYSVAR_RENT_PUBKEY, TransactionInstruction } from '@solana/web3.js';
 import { serialize } from 'borsh';
-import { FANGIBLE_STORE } from 'modules/common/conts';
 
 import { getWhitelistedCreator, SCHEMA, SetWhitelistedCreatorArgs } from '.';
 
@@ -13,7 +12,7 @@ export async function setWhitelistedCreator(
   instructions: TransactionInstruction[],
 ) {
   const PROGRAM_IDS = programIds();
-  const store = FANGIBLE_STORE;
+  const store = PROGRAM_IDS.store;
   if (!store) {
     throw new Error('Store not initialized');
   }
