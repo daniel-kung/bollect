@@ -1,6 +1,5 @@
 import {
   useConnection,
-  useStore,
   AUCTION_ID,
   METAPLEX_ID,
   VAULT_ID,

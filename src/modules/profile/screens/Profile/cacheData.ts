@@ -1,4 +1,4 @@
-import { IMetadataExtension } from '@oyster/common';
+import { IMetadataExtension } from 'npms/oystoer';
 import { useMintMetaData } from 'modules/profile/hooks/useMyMint';
 import { useEffect, useState } from 'react';
 

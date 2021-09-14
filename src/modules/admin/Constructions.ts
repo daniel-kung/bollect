@@ -1,4 +1,4 @@
-import { StringPublicKey } from '@oyster/common';
+import { StringPublicKey } from 'npms/oystoer';
 import { MetaplexKey } from 'models/metaplex';
 
 export class WhitelistedCreator {

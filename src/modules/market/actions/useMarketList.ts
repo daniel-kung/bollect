@@ -1,35 +1,8 @@
-import {
-  decodeMetadata,
-  MAX_CREATOR_LEN,
-  MAX_NAME_LENGTH,
-  MAX_SYMBOL_LENGTH,
-  MAX_URI_LENGTH,
-  TokenAccount,
-  TokenAccountParser,
-  useConnection,
-} from '@oyster/common';
+import { TokenAccountParser, useConnection } from 'npms/oystoer';
 import { getProgramAccounts } from 'contexts/meta/loadAccounts';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import {
-  AUCTION_ID,
-  METADATA_PROGRAM_ID,
-} from '@oyster/common/dist/lib/utils/ids';
-
-const offset =
-  1 + // key
-  32 + // update auth
-  32 + // mint
-  4 + // name string length
-  MAX_NAME_LENGTH + // name
-  4 + // uri string length
-  MAX_URI_LENGTH + // uri
-  4 + // symbol string length
-  MAX_SYMBOL_LENGTH + // symbol
-  2 + // seller fee basis points
-  1 + // whether or not there is a creators vec
-  4 + // creators vec length
-  0 * MAX_CREATOR_LEN;
+import { AUCTION_ID } from 'npms/oystoer';
 
 export interface IMyMintItem {
   name: string;

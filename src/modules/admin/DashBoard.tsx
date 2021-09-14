@@ -4,7 +4,7 @@ import {
   sendTransactionWithRetry,
   SequenceType,
   useConnection,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Keypair, TransactionInstruction } from '@solana/web3.js';
 import { WhitelistedCreator } from 'models/metaplex';

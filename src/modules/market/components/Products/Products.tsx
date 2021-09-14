@@ -21,11 +21,6 @@ import { Pagination } from '../../../uiKit/Pagination';
 import { useProductsStyles } from './useProductsStyles';
 import { MarketNftCard } from './nftCard';
 import { uid } from 'react-uid';
-import {
-  AuctionViewState,
-  useAuctions,
-} from 'modules/common/hooks/useAuctions';
-import { useMarketList } from 'modules/market/actions/useMarketList';
 
 const ITEMS_PORTION_COUNT = 20;
 const DEFAULT_PAGE = 1;
