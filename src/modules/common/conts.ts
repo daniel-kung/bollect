@@ -1,4 +1,3 @@
-import { PublicKey } from '@solana/web3.js';
 import { ChainSymbol, TokenSymbol } from './types/TokenSymbol';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
