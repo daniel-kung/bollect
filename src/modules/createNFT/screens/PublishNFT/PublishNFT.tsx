@@ -47,15 +47,17 @@ import { IPublishEnglishAuction, IPublishFixedSwap } from './types';
 import { usePutOnSaleBidSubmit } from './handleSubmit';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store';
-import { accountGetMasterEditionInfo } from 'modules/common/utils/solanaAccount';
+import {
+  accountGetMasterEditionInfo,
+  getAccountTokenSpl,
+} from 'modules/common/utils/solanaAccount';
 import { decodeMetadata, useConnection } from 'npms/oystoer';
 import { PublicKey } from '@solana/web3.js';
 import { AmountRange, WinningConfigType } from 'models/metaplex';
 import BN from 'bn.js';
 import { TokenSymbol } from 'modules/common/types/TokenSymbol';
-
-const MIN_AMOUNT = 1;
-
+import { extractMessage } from 'modules/common/utils/extractError';
+import { NotificationActions } from 'modules/notification/store/NotificationActions';
 type IPublishNFTFormData = IPublishFixedSwap | IPublishEnglishAuction;
 
 interface IPublishNFTComponentProps {
@@ -89,7 +91,6 @@ export const PublishNFTComponent = ({
   const connection = useConnection();
   const { handlePutOnSale } = usePutOnSaleBidSubmit();
   const [purchasePriceChecked, setPurchasePriceChecked] = useState(true);
-  const [reservePriceChecked, setReservePriceChecked] = useState(true);
   const storeWhiteCreators = useSelector(
     (state: RootState) => state.user.storeWhiteCreators,
   );
@@ -99,12 +100,7 @@ export const PublishNFTComponent = ({
     setPurchasePriceChecked(prev => !prev);
   }, []);
 
-  const toggleReservePriceChecked = useCallback(() => {
-    setReservePriceChecked(prev => !prev);
-  }, []);
-
-  const { options: currencyOptions, default: defaultCurrency } =
-    useCurrencies();
+  const { default: defaultCurrency } = useCurrencies();
 
   const handleUnitChange = useCallback(
     (value: Address) => {
@@ -113,76 +109,27 @@ export const PublishNFTComponent = ({
     [dispatch],
   );
 
-  const validateCreateNFT = useCallback(
-    (payload: IPublishNFTFormData) => {
-      const errors: FormErrors<IPublishNFTFormData> = {};
-      const quantity = +payload.quantity;
+  const validateCreateNFT = useCallback((payload: IPublishNFTFormData) => {
+    const errors: FormErrors<IPublishNFTFormData> = {};
 
-      if (!quantity) {
-        errors.quantity = t('validation.required');
-      } else if (quantity < MIN_AMOUNT) {
-        errors.quantity = t('validation.min', { value: MIN_AMOUNT });
-      } else if (quantity > maxQuantity) {
-        errors.quantity = t('validation.max', { value: maxQuantity });
+    if (payload.type === AuctionType.FixedSwap) {
+      const price = +payload.price;
+      if (!price) {
+        errors.price = t('validation.required');
+      } else if (price <= 0) {
+        errors.price = t('validation.min', { value: 0 });
       }
-
-      if (payload.type === AuctionType.FixedSwap) {
-        const price = +payload.price;
-        if (!price) {
-          errors.price = t('validation.required');
-        } else if (price <= 0) {
-          errors.price = t('validation.min', { value: 0 });
-        }
-      } else {
-        const minBid = +payload.minBid;
-        const purchasePrice = +payload.purchasePrice;
-        const reservePrice = +payload.reservePrice;
-        if (!minBid) {
-          errors.minBid = t('validation.required');
-        } else if (minBid <= 0) {
-          errors.minBid = t('validation.min', { value: 0 });
-        }
-
-        if (purchasePriceChecked) {
-          if (!purchasePrice) {
-            errors.purchasePrice = t('validation.required');
-          } else if (purchasePrice <= 0) {
-            errors.purchasePrice = t('validation.min', { value: 0 });
-          } else if (!reservePriceChecked && minBid >= purchasePrice) {
-            errors.purchasePrice = t(
-              'publish-nft.error.wrong-direct-bid-amount',
-            );
-          }
-        }
-
-        if (reservePriceChecked) {
-          if (!reservePrice) {
-            errors.reservePrice = t('validation.required');
-          } else if (reservePrice <= 0) {
-            errors.reservePrice = t('validation.min', { value: 0 });
-          } else if (!purchasePriceChecked && minBid > reservePrice) {
-            errors.purchasePrice = t(
-              'publish-nft.error.wrong-reserve-bid-amount',
-            );
-          }
-        }
-
-        if (
-          minBid &&
-          purchasePriceChecked &&
-          reservePriceChecked &&
-          !(minBid <= reservePrice && reservePrice < purchasePrice)
-        ) {
-          errors.minBid = t(
-            'publish-nft.error.wrong-direct-reserve-bid-amount',
-          );
-        }
+    } else {
+      const minBid = +payload.minBid;
+      if (!minBid) {
+        errors.minBid = t('validation.required');
+      } else if (minBid <= 0) {
+        errors.minBid = t('validation.min', { value: 0 });
       }
+    }
 
-      return errors;
-    },
-    [maxQuantity, purchasePriceChecked, reservePriceChecked],
-  );
+    return errors;
+  }, []);
 
   const durationOptions = useMemo(
     () => [
@@ -213,56 +160,76 @@ export const PublishNFTComponent = ({
   const handleSubmit = useCallback(
     async (payload: IPublishNFTFormData) => {
       setLoading(true);
-      const metadataAccount = await connection.getAccountInfo(
-        new PublicKey(tokenId),
-      );
-      const masterEdition = await accountGetMasterEditionInfo({
-        publicKey: tokenId,
-        connection,
-      });
-      if (
-        payload.type === AuctionType.EnglishAuction &&
-        metadataAccount?.data
-      ) {
-        const auctionObj = await handlePutOnSale({
-          name,
-          purchasePriceChecked,
-          reservePriceChecked,
-          tokenContract,
-          tokenId,
-          payload,
-          storeWhiteCreators,
-          attributesItems: [
-            {
-              masterEdition: masterEdition
-                ? {
-                    info: masterEdition.masterEditionAccountData,
-                    pubkey: tokenId,
-                    account: masterEdition.masterEditionAccount,
-                  }
-                : undefined,
-              // TODO edition
-              // edition: {},
-              metadata: {
-                info: decodeMetadata(metadataAccount.data),
-                pubkey: tokenId,
-                account: metadataAccount,
+      try {
+        const getInfoParam = {
+          publicKey: tokenId,
+          connection,
+        };
+        const metadataAccount = await connection.getAccountInfo(
+          new PublicKey(tokenId),
+        );
+        const masterEdition = await accountGetMasterEditionInfo(getInfoParam);
+
+        const holding = await getAccountTokenSpl(getInfoParam);
+        console.log('holding---------->', holding);
+        if (
+          payload.type === AuctionType.EnglishAuction &&
+          metadataAccount?.data &&
+          holding
+        ) {
+          const auctionObj = await handlePutOnSale({
+            name,
+            purchasePriceChecked,
+            reservePriceChecked: false,
+            tokenContract,
+            tokenId,
+            payload,
+            // TODO 待继续验证
+            storeWhiteCreators,
+            attributesItems: [
+              {
+                masterEdition: masterEdition
+                  ? {
+                      info: masterEdition.masterEditionAccountData,
+                      // TODO 待验证
+                      pubkey: masterEdition.masterKey,
+                      account: masterEdition.masterEditionAccount,
+                    }
+                  : undefined,
+                // TODO edition
+                edition: undefined,
+                metadata: {
+                  // TODO edition和masterEdition
+                  // edition: Gd6caAF6o6suQSPW2zoCee8cyum6vcjyNyfxzMB1FRuL // 没有edition的话和masterEdition一样
+                  info: decodeMetadata(metadataAccount.data),
+                  // 2yS9htaUP9VhiVvjyHkcGFzQmZyH3qzrxCP61aWLd4vR
+                  pubkey: tokenId,
+                  account: metadataAccount,
+                },
+                holding,
+                winningConfigType: WinningConfigType.FullRightsTransfer,
+                amountRanges: [
+                  new AmountRange({
+                    amount: new BN(1),
+                    length: new BN(1),
+                  }),
+                ],
               },
-              holding: tokenId,
-              winningConfigType: WinningConfigType.FullRightsTransfer,
-              amountRanges: [
-                new AmountRange({
-                  amount: new BN(1),
-                  length: new BN(1),
-                }),
-              ],
-            },
-          ],
-        });
-        console.log('auctionObj------>', auctionObj);
-        push(ProfileRoutesConfig.UserProfile.generatePath(ProfileTab.sells));
+            ],
+          });
+          console.log('auctionObj------>', auctionObj);
+          push(ProfileRoutesConfig.UserProfile.generatePath(ProfileTab.sells));
+        }
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        storeDispatch(
+          NotificationActions.showNotification({
+            message: extractMessage(new Error('error')),
+            severity: 'error',
+          }),
+        );
       }
-      setLoading(false);
     },
     [
       connection,
@@ -270,7 +237,6 @@ export const PublishNFTComponent = ({
       handlePutOnSale,
       name,
       purchasePriceChecked,
-      reservePriceChecked,
       tokenContract,
       storeWhiteCreators,
       push,
@@ -335,26 +301,6 @@ export const PublishNFTComponent = ({
                     ),
                   }}
                 />
-              </Box>
-
-              <Box className={classes.formControl}>
-                <Field
-                  component={InputField}
-                  name="quantity"
-                  type="number"
-                  label={t('publish-nft.label.amount')}
-                  color="primary"
-                  fullWidth={true}
-                  disabled={nftType === NftType.ERC721}
-                  inputProps={{
-                    step: 1,
-                    min: '0',
-                    inputMode: 'decimal',
-                  }}
-                />
-                <div className={classes.fieldText}>
-                  {t('publish-nft.auction-amount')}
-                </div>
               </Box>
 
               <Box className={classes.formControl}>
@@ -449,72 +395,7 @@ export const PublishNFTComponent = ({
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          <Field
-                            component={SelectField}
-                            name="unitContract"
-                            color="primary"
-                            fullWidth
-                            options={currencyOptions}
-                            className={classes.currencySelect}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-              </Box>
-
-              <Box className={classes.formControl}>
-                <Box mb={2.5}>
-                  <Grid container alignItems="center">
-                    <Grid item xs>
-                      <InputLabel shrink className={classes.labelNoMargin}>
-                        <Box display="flex" alignItems="center">
-                          {t('publish-nft.label.reservePrice')}
-
-                          <Tooltip
-                            title={t('publish-nft.tooltip.reservePrice')}
-                          >
-                            <Box component="i" ml={1}>
-                              <QuestionIcon />
-                            </Box>
-                          </Tooltip>
-                        </Box>
-                      </InputLabel>
-                    </Grid>
-
-                    <Grid item>
-                      <Switch
-                        checked={reservePriceChecked}
-                        onChange={toggleReservePriceChecked}
-                      />
-                    </Grid>
-                  </Grid>
-                </Box>
-
-                {reservePriceChecked && (
-                  <Field
-                    component={InputField}
-                    name="reservePrice"
-                    type="number"
-                    color="primary"
-                    fullWidth={true}
-                    inputProps={{
-                      step: 'any',
-                      min: '0',
-                      inputMode: 'decimal',
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Field
-                            component={SelectField}
-                            name="unitContract"
-                            color="primary"
-                            fullWidth={true}
-                            options={currencyOptions}
-                            className={classes.currencySelect}
-                          />
+                          {TokenSymbol.SOLANA}
                         </InputAdornment>
                       ),
                     }}
@@ -597,3 +478,6 @@ export const PublishNFT = () => {
     </>
   );
 };
+function storeDispatch(arg0: any) {
+  throw new Error('Function not implemented.');
+}

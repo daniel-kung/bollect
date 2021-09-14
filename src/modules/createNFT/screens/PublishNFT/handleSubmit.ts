@@ -25,7 +25,7 @@ const MIN_INCREMENTAL_PART = 0.05;
 export const usePutOnSaleBidSubmit = () => {
   const connection = useConnection();
   const wallet = useWallet();
-  const { account } = useReactWeb3();
+  const { address } = useReactWeb3();
 
   const handlePutOnSale = async ({
     payload,
@@ -98,10 +98,25 @@ export const usePutOnSaleBidSubmit = () => {
       'whitelistedCreatorsByCreator----->',
       whitelistedCreatorsByCreator,
     );
+    console.log('createAuctionManager----------->', [
+      connection,
+      {
+        publicKey: address ? new PublicKey(address) : null,
+        signTransaction: wallet.signTransaction,
+        signAllTransactions: wallet.signAllTransactions,
+      },
+      whitelistedCreatorsByCreator,
+      auctionSettings,
+      attributesItems,
+      undefined,
+      WRAPPED_SOL_MINT.toBase58(),
+    ]);
+    debugger;
+
     const _auctionObj = await createAuctionManager(
       connection,
       {
-        publicKey: account as unknown as PublicKey | null,
+        publicKey: address ? new PublicKey(address) : null,
         signTransaction: wallet.signTransaction,
         signAllTransactions: wallet.signAllTransactions,
       },

@@ -182,4 +182,5 @@ export const DefaultChainId = BlockchainNetworkId.smartchain;
 export const getTokenSymbol = (chainId: BlockchainNetworkId) =>
   BlockChainTokenSymbol[chainId] || DefaultTokenSymbol;
 
-export const FANGIBLE_STORE = 'Cx4Fe6WyRJopHVLLmYB9bnC8y2DnKbWX3cgRWc5dVvQS';
+// export const FANGIBLE_STORE = 'Cx4Fe6WyRJopHVLLmYB9bnC8y2DnKbWX3cgRWc5dVvQS';
+export const FANGIBLE_STORE = 'GyJHjdqFjeN7xyCrUiG9hngN2rigq49Qka7G7mytYPX1';

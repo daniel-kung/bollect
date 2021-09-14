@@ -24,6 +24,30 @@ export const getAccountInfo = (publicKey: string) => {
   });
 };
 
+export const getAccountTokenSpl = async ({
+  publicKey,
+  connection,
+}: {
+  publicKey: string;
+  connection: Connection;
+}) => {
+  const account = await connection.getAccountInfo(
+    new PublicKey(publicKey),
+    'confirmed',
+  );
+  if (account) {
+    const mint = decodeMetadata(account.data).mint;
+
+    const tokenLspAccounts = await connection.getTokenLargestAccounts(
+      new PublicKey(mint),
+    );
+    const holding = tokenLspAccounts.value[0].address.toBase58();
+    return holding;
+  }
+  new Error('SPL Error');
+  return '';
+};
+
 export const accountGetMasterEditionInfo = async ({
   publicKey,
   connection,
@@ -51,6 +75,7 @@ export const accountGetMasterEditionInfo = async ({
         return {
           masterEditionAccountData,
           masterEditionAccount,
+          masterKey,
         };
       }
     }
