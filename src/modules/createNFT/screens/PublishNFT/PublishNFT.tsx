@@ -43,9 +43,6 @@ import { IItemRoyaltyRes } from 'modules/brand/components/RoyaltyDialog/action/f
 import { RenderRoyalty } from './Royalty';
 import { IPublishEnglishAuction, IPublishFixedSwap } from './types';
 import { usePutOnSaleBidSubmit } from './handleSubmit';
-import { useEffect } from 'react';
-import { getCreators } from 'modules/common/utils/solanaAccount';
-import { useConnection } from 'npms/oystoer';
 
 const MIN_AMOUNT = 1;
 
@@ -78,7 +75,6 @@ export const PublishNFTComponent = ({
 }: IPublishNFTComponentProps) => {
   const classes = usePublishNFTtyles();
   const dispatch = useDispatchRequest();
-  const connection = useConnection();
   const { handlePutOnSale } = usePutOnSaleBidSubmit();
   const [purchasePriceChecked, setPurchasePriceChecked] = useState(true);
   const [reservePriceChecked, setReservePriceChecked] = useState(true);
@@ -93,43 +89,6 @@ export const PublishNFTComponent = ({
 
   const { options: currencyOptions, default: defaultCurrency } =
     useCurrencies();
-
-  useEffect(() => {
-    (async () => {
-      // const _whiteCreateList = await connection.getProgramAccounts(
-      //   new PublicKey('4AHXzUQLAiaYm9rFS8vtXM79QZvUMr2Cr3u96PN2iekc'),
-      // );
-      // console.log('_whiteCreateList------>', _whiteCreateList);
-      // const whiteCreateList = _whiteCreateList.forEach(e => {
-      //   return decodeMetadata(e.account.data);
-      // });
-      // console.log('whiteCreateList------>', whiteCreateList);
-
-      const creators = await getCreators({ connection });
-      console.log('---creators---');
-      console.log(creators);
-
-      // const editionAddress = await getEdition(
-      //   '7JPVGHtdPKZZnHamujFwKaG33yZyxzyteESx5Q4p4NyE',
-      // );
-      // const edition = await connection.getAccountInfo(
-      //   new PublicKey(editionAddress),
-      // );
-      // console.log('edition------->', edition, editionAddress);
-
-      // const masterEdition = await accountGetMasterEditionInfo({
-      //   publicKey: '3M7bZpyEmcRxhBHRiY9KevjAwE1BuwtQzaLwxZ6FQMxT',
-      //   connection,
-      // });
-
-      // new Buffer.from('BDvMXqweSVu1JyLow9+81j+UrHLmyR8iay5tpw4altY2AQAAAAAAAAAAAAA=')
-
-      // console.log(
-      //   '---masterEdition-----> ',
-      //   masterEdition?.masterEditionAccountData,
-      // );
-    })();
-  }, [connection]);
 
   const handleUnitChange = useCallback(
     (value: Address) => {

@@ -31,10 +31,14 @@ import {
 // };
 
 export const setProgramIds = async (store?: string) => {
-  STORE = store ? toPublicKey(store) : undefined;
+  STORE = store
+    ? toPublicKey(store)
+    : toPublicKey('GyJHjdqFjeN7xyCrUiG9hngN2rigq49Qka7G7mytYPX1');
 };
 
-let STORE: PublicKey | undefined;
+let STORE: PublicKey | undefined = toPublicKey(
+  'GyJHjdqFjeN7xyCrUiG9hngN2rigq49Qka7G7mytYPX1',
+);
 
 export const programIds = () => {
   return {
