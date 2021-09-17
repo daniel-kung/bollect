@@ -126,62 +126,15 @@ export const Profile = () => {
     () => [
       {
         value: ProfileTab.sells,
-        label: t('profile.tabs.my-sells'),
+        label: t('profile.tabs.all-item'),
       },
-      // {
-      //   value: ProfileTab.collections,
-      //   label: t('profile.tabs.my-collections'),
-      // },
       {
         value: ProfileTab.owned,
         label: t('profile.tabs.showcase'),
       },
-      {
-        value: ProfileTab.bids,
-        label: t('profile.tabs.my-bids'),
-      },
-      // {
-      //   value: ProfileTab.activity,
-      //   label: t('profile.tabs.activity'),
-      // },
-      // ...(featuresConfig.nftLikes
-      //   ? [
-      //       {
-      //         value: ProfileTab.liked,
-      //         label: t('profile.tabs.liked'),
-      //         count: likeCount,
-      //       },
-      //     ]
-      //   : []),
-      // ...(featuresConfig.profileFollowers
-      //   ? [
-      //       {
-      //         value: ProfileTab.following,
-      //         label: t('profile.tabs.following'),
-      //         count: 0,
-      //       },
-      //       {
-      //         value: ProfileTab.followers,
-      //         label: t('profile.tabs.followers'),
-      //         count: 0,
-      //       },
-      //     ]
-      //   : []),
     ],
     [],
   );
-
-  // const renderFollow = useCallback(() => {
-  //   if (!address) return;
-  //   return (
-  //     <FollowGroup
-  //       followAddress={address}
-  //       followersCount={profileInfo?.followersCount}
-  //       followingCount={profileInfo?.followingCount}
-  //       black={true}
-  //     />
-  //   );
-  // }, [profileInfo, address]);
 
   return (
     <Section className={classes.root}>

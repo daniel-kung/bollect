@@ -10,6 +10,7 @@ import {
 import { getProgramAccounts } from 'contexts/meta/loadAccounts';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { isMetadataV1Account } from 'contexts/meta/processMetaData';
 
 const offset =
   1 + // key
@@ -62,6 +63,46 @@ export const useMintMetaData = (address: string) => {
             pubkey: e.pubkey,
           };
         });
+        setLoading(false);
+        setList(list);
+      }
+    };
+    init();
+  }, [connection, address]);
+
+  return {
+    data: list,
+    loading,
+  };
+};
+
+export const useMyCrateMetaData = (address: string) => {
+  const connection = useConnection();
+  const [list, setList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const init = async () => {
+      if (address) {
+        setLoading(true);
+        const data = await getProgramAccounts(
+          connection,
+          METADATA_PROGRAM_ID,
+          {},
+        );
+        const list = data
+          .filter(m => isMetadataV1Account(m.account))
+          .map(e => {
+            const v = decodeMetadata(e.account.data);
+            return {
+              info: v,
+              name: v.data.name,
+              uri: v.data.uri,
+              sellerFeeBasisPoints: v.data.sellerFeeBasisPoints,
+              pubkey: e.pubkey,
+            };
+          })
+          .filter(m => m.info.data.creators?.some(c => c.address === address));
         setLoading(false);
         setList(list);
       }

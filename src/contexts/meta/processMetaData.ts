@@ -85,21 +85,21 @@ export const processMetaData: ProcessAccountsFunc = (
   }
 };
 
-const isMetadataAccount = (account: AccountInfo<Buffer>) => {
+export const isMetadataAccount = (account: AccountInfo<Buffer>) => {
   return (account.owner as unknown as any) === METADATA_PROGRAM_ID;
 };
 
-const isMetadataV1Account = (account: AccountInfo<Buffer>) =>
+export const isMetadataV1Account = (account: AccountInfo<Buffer>) =>
   account.data[0] === MetadataKey.MetadataV1;
 
-const isEditionV1Account = (account: AccountInfo<Buffer>) =>
+export const isEditionV1Account = (account: AccountInfo<Buffer>) =>
   account.data[0] === MetadataKey.EditionV1;
 
-const isMasterEditionAccount = (account: AccountInfo<Buffer>) =>
+export const isMasterEditionAccount = (account: AccountInfo<Buffer>) =>
   account.data[0] === MetadataKey.MasterEditionV1 ||
   account.data[0] === MetadataKey.MasterEditionV2;
 
-const isMasterEditionV1 = (
+export const isMasterEditionV1 = (
   me: MasterEditionV1 | MasterEditionV2,
 ): me is MasterEditionV1 => {
   return me.key === MetadataKey.MasterEditionV1;
