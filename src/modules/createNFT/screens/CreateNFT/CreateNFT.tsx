@@ -280,7 +280,7 @@ export const CreateNFT = () => {
               options={channelOptions}
             />
           </Box>
-          <Box mb={5}>
+          {/* <Box mb={5}>
             <Field
               component={InputField}
               name="points"
@@ -293,32 +293,8 @@ export const CreateNFT = () => {
               color="primary"
               fullWidth={true}
             />
-          </Box>
-          <Box mb={5}>
-            <Field
-              component={InputField}
-              name="supply"
-              type="number"
-              label={t('create-nft.label.max-supply')}
-              color="primary"
-              fullWidth={true}
-            />
-          </Box>
-          {false && (
-            <Box mb={5}>
-              <Field
-                component={renderCollection}
-                name="collection"
-                type="text"
-                label={t('create-nft.label.collection')}
-                color="primary"
-                fullWidth={true}
-                rowsMax={10}
-                multiline
-              />
-            </Box>
-          )}
-          {false && (
+          </Box> */}
+          {
             <Box mb={5}>
               <Field
                 component={InputField}
@@ -335,7 +311,7 @@ export const CreateNFT = () => {
                 }}
               />
             </Box>
-          )}
+          }
           <Box>
             <Button size="large" type="submit" fullWidth loading={loading}>
               {loading ? t('common.submitting') : t('create-nft.submit')}
