@@ -13,22 +13,25 @@ import { useReactWeb3 } from 'modules/common/hooks/useReactWeb3';
 import { Button } from 'modules/uiKit/Button';
 import { useState } from 'react';
 import { DashTable } from './components/DashTable';
-import { IDashBoardItemRow } from './components/TableItemRow';
-// import { WhitelistedCreator } from './Constructions';
 import { useDashBoardStyles } from './useDashBoardStyles';
-
-// TODO 白名单列表需要动态获取
-const mockData: IDashBoardItemRow[] = [
-  {
-    name: 'Homie_Store',
-    address: '8ChvDwTCPsEvFbduVmTw19qQjfhZtyR968MBknzTm3vB',
-    activated: true,
-  },
-];
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
 
 export const DashBoard = () => {
   const classes = useDashBoardStyles();
-  const [whiteList, setWhiteList] = useState(mockData || []);
+  const storeWhiteCreators = useSelector(
+    (state: RootState) => state.user.storeWhiteCreators,
+  );
+  const _whiteList = storeWhiteCreators.map(e => {
+    return {
+      name: e.account.info.name ?? '',
+      address: e.address,
+      activated: true,
+    };
+  });
+
+  const [whiteList, setWhiteList] = useState(_whiteList || []);
+
   const { account } = useReactWeb3();
   const connection = useConnection();
   const wallet = useWallet();

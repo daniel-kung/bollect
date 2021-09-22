@@ -30,13 +30,13 @@ export const TabOwned: React.FC<{
   return (
     <ProductCards isLoading={loading}>
       {list.map(e => {
-        return <Item key={uid(e)} item={e} artAddress={artAddress} />;
+        return <ItemCard key={uid(e)} item={e} artAddress={artAddress} />;
       })}
     </ProductCards>
   );
 };
 
-const Item: React.FC<{ item: IMyMintItem; artAddress: string }> = ({
+export const ItemCard: React.FC<{ item: IMyMintItem; artAddress: string }> = ({
   item,
   artAddress,
 }) => {
