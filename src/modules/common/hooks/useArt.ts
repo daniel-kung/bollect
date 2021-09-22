@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useMeta } from 'contexts';
 import { Art, Artist, ArtType } from 'contexts/meta/types';
 import {
+  decodeMetadata,
   Edition,
   IMetadataExtension,
   MasterEditionV1,
@@ -9,41 +10,51 @@ import {
   Metadata,
   ParsedAccount,
   StringPublicKey,
+  useConnection,
 } from 'npms/oystoer';
 import { WhitelistedCreator } from 'models/metaplex';
 import { Cache } from 'three';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
+import { accountGetMasterEditionInfo } from '../utils/solanaAccount';
+import { AccountInfo, PublicKey } from '@solana/web3.js';
 
 const metadataToArt = (
   info: Metadata | undefined,
   editions: Record<string, ParsedAccount<Edition>>,
-  masterEditions: Record<
-    string,
-    ParsedAccount<MasterEditionV1 | MasterEditionV2>
-  >,
   whitelistedCreatorsByCreator: Record<
     string,
     ParsedAccount<WhitelistedCreator>
   >,
+  masterEdition?: {
+    masterEditionAccountData: MasterEditionV1 | MasterEditionV2;
+    masterEditionAccount: AccountInfo<Buffer>;
+    masterKey: string;
+  },
 ) => {
+  console.log('info--->', info);
+  console.log('masterEdition--->', masterEdition);
   let type: ArtType = ArtType.NFT;
   let editionNumber: number | undefined = undefined;
   let maxSupply: number | undefined = undefined;
   let supply: number | undefined = undefined;
 
   if (info) {
-    const masterEdition = masterEditions[info.masterEdition || ''];
-    const edition = editions[info.edition || ''];
+    // const edition = editions[info.edition || ''];
+    const edition = '';
     if (edition) {
-      const myMasterEdition = masterEditions[edition.info.parent || ''];
+      // const myMasterEdition = masterEditions[edition.info.parent || ''];
+      const myMasterEdition = masterEdition?.masterEditionAccountData;
       if (myMasterEdition) {
         type = ArtType.Print;
-        editionNumber = edition.info.edition.toNumber();
-        supply = myMasterEdition.info?.supply.toNumber() || 0;
+        // editionNumber = edition.info.edition.toNumber();
+        editionNumber = 1;
+        supply = myMasterEdition?.supply.toNumber() || 0;
       }
     } else if (masterEdition) {
       type = ArtType.Master;
-      maxSupply = masterEdition.info.maxSupply?.toNumber();
-      supply = masterEdition.info.supply.toNumber();
+      maxSupply = masterEdition.masterEditionAccountData.maxSupply?.toNumber();
+      supply = masterEdition.masterEditionAccountData.supply.toNumber();
     }
   }
 
@@ -129,47 +140,48 @@ export const useCachedImage = (uri: string, cacheMesh?: boolean) => {
   return { cachedBlob, isLoading };
 };
 
-export const useArt = (key?: StringPublicKey) => {
+export const useArt = (key?: StringPublicKey, artAdress?: StringPublicKey) => {
   const { metadata, editions, masterEditions, whitelistedCreatorsByCreator } =
     useMeta();
+  const connection = useConnection();
+  const storeWhiteCreators = useSelector(
+    (state: RootState) => state.user.storeWhiteCreators,
+  ).reduce<any>((pre, c) => {
+    pre[c.address] = c.account;
+    return pre;
+  }, {});
 
-  const account = useMemo(
-    () => metadata.find(a => a.pubkey === key),
-    [key, metadata],
-  );
+  // const account = useMemo(
+  //   () => metadata.find(a => a.pubkey === key),
+  //   [key, metadata],
+  // );
+
+  const [masterEdition, setMasterEdition] = useState<{
+    masterEditionAccountData: MasterEditionV1 | MasterEditionV2;
+    masterEditionAccount: AccountInfo<Buffer>;
+    masterKey: string;
+  }>();
+  const [accountInfo, setAccountInfo] = useState<Metadata>();
+  useEffect(() => {
+    const initData = async () => {
+      if (!key) {
+        return;
+      }
+      setMasterEdition(
+        await accountGetMasterEditionInfo({ publicKey: key, connection }),
+      );
+      const account = await connection.getAccountInfo(new PublicKey(key));
+      if (account) {
+        setAccountInfo(decodeMetadata(account.data));
+      }
+    };
+    initData();
+  }, []);
 
   const art = useMemo(
     () =>
-      metadataToArt(
-        account?.info,
-        editions,
-        masterEditions,
-        whitelistedCreatorsByCreator,
-      ),
-    [account, editions, masterEditions, whitelistedCreatorsByCreator],
-  );
-
-  return art;
-};
-
-export const useNewArt = (key?: StringPublicKey) => {
-  const { metadata, editions, masterEditions, whitelistedCreatorsByCreator } =
-    useMeta();
-
-  const account = useMemo(
-    () => metadata.find(a => a.pubkey === key),
-    [key, metadata],
-  );
-
-  const art = useMemo(
-    () =>
-      metadataToArt(
-        account?.info,
-        editions,
-        masterEditions,
-        whitelistedCreatorsByCreator,
-      ),
-    [account, editions, masterEditions, whitelistedCreatorsByCreator],
+      metadataToArt(accountInfo, editions, storeWhiteCreators, masterEdition),
+    [accountInfo, editions, masterEdition, whitelistedCreatorsByCreator],
   );
 
   return art;

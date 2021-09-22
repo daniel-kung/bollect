@@ -28,13 +28,12 @@ export const ShowNftDetail = () => {
   const nftInfo = useCacheMetaData(contract, artAddress);
   const { address } = useReactWeb3();
   const wallets = useWallet();
-  const art = useArt(artAddress);
+  const art = useArt(contract, artAddress);
   const connection = useConnection();
   const artMintTokenAccount = accountByMint.get(art.mint!);
 
   const saleTime = false;
   const onChangeTime = () => {};
-
   const renderedComingSoon = <Box mt={2}>{t('common.coming-soon')}</Box>;
 
   const onMint = async () => {
@@ -43,6 +42,7 @@ export const ShowNftDetail = () => {
       address,
     );
     if (!toAddress) return;
+    console.log('art----------->', art);
     await mintEditionsToWallet(
       art,
       wallets!,
