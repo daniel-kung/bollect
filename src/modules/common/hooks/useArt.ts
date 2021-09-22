@@ -152,6 +152,29 @@ export const useArt = (key?: StringPublicKey) => {
   return art;
 };
 
+export const useNewArt = (key?: StringPublicKey) => {
+  const { metadata, editions, masterEditions, whitelistedCreatorsByCreator } =
+    useMeta();
+
+  const account = useMemo(
+    () => metadata.find(a => a.pubkey === key),
+    [key, metadata],
+  );
+
+  const art = useMemo(
+    () =>
+      metadataToArt(
+        account?.info,
+        editions,
+        masterEditions,
+        whitelistedCreatorsByCreator,
+      ),
+    [account, editions, masterEditions, whitelistedCreatorsByCreator],
+  );
+
+  return art;
+};
+
 const routeCDN = (uri: string) => {
   const USE_CDN = false;
   let result = uri;
@@ -162,7 +185,27 @@ const routeCDN = (uri: string) => {
     );
   }
 
-  return result;
+  // return result;
+  return {
+    creators: [
+      {
+        address: 'AhNbarZ7LBjJayxWtvsygAXz78iMsbXrBxe1c3pTHKDs',
+        image: '',
+        link: '',
+        name: '',
+        share: 100,
+        verified: 1,
+      },
+    ],
+    edition: undefined,
+    maxSupply: 100,
+    mint: '9fqxYdkMo6jfJU5GWuyEtrcxi9qoy4TfWArFYgTEG9YM',
+    seller_fee_basis_points: 1500,
+    supply: 3,
+    title: 'HOMIE_XU',
+    type: 0,
+    uri: 'https://arweave.net/e_D4D2JZiqlCPALXv6YdwZl8hxjbgsqJuIEVUx6NqL0',
+  };
 };
 
 export const useExtendedArt = (uri: string) => {

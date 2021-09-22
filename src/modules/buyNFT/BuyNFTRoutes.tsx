@@ -55,7 +55,7 @@ const LoadableDetailsNFTContainer: LoadableComponent<any> = loadable(
 );
 
 const LoadableDetailsNFTItemContainer: LoadableComponent<any> = loadable(
-  async () => import('./screens/BuyNFT').then(module => module.BuyItemNFT),
+  async () => import('./screens/BuyNFT').then(module => module.ShowNftDetail),
   {
     fallback: <QueryLoadingAbsolute />,
   },

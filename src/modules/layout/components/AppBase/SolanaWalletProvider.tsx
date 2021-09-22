@@ -15,6 +15,7 @@ import { NotificationActions } from 'modules/notification/store/NotificationActi
 import { extractMessage } from 'modules/common/utils/extractError';
 import { useDispatch } from 'react-redux';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import { AccountsProvider } from 'npms/oystoer';
 
 export const SolanaWalletProvider: FC<{ children: ReactNode }> = ({
   children,
@@ -56,7 +57,7 @@ export const SolanaWalletProvider: FC<{ children: ReactNode }> = ({
         onError={onError}
         autoConnect={autoConnect}
       >
-        {children}
+        <AccountsProvider>{children}</AccountsProvider>
       </WalletProvider>
     </ConnectionProvider>
   );

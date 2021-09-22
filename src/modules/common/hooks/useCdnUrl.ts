@@ -19,22 +19,29 @@ const useCdnUrl = (src: string, width?: number, height?: number) => {
   };
 
   const getCdnUrl = (
-    src: string,
+    src: string | { image: string },
     width: number = 0,
     height: number = 0,
   ): string => {
     const suffixs = ['.jpg', '.png', '.gif', '.jp2', '.jpeg'];
-
+    let realSrc = '';
+    if (typeof src === 'object') {
+      src = src.image || '';
+    } else {
+      realSrc = src;
+    }
     const hasThumbnail =
-      (src.slice(0, cdnUrl?.length) === cdnUrl ||
-        src.slice(0, hecoCdnUrl?.length) === hecoCdnUrl) &&
-      suffixs.find(format => src.slice(-5)?.includes(format));
+      (realSrc?.slice(0, cdnUrl?.length) === cdnUrl ||
+        realSrc?.slice(0, hecoCdnUrl?.length) === hecoCdnUrl) &&
+      suffixs.find(format => realSrc.slice(-5)?.includes(format));
 
-    const getThumbnailUrl = (src: String): string => {
+    const getThumbnailUrl = (realSrc: String): string => {
       if (cdnUrl || hecoCdnUrl) {
-        return `${src?.slice(0, src?.lastIndexOf('/'))}/${
+        return `${realSrc?.slice(0, realSrc?.lastIndexOf('/'))}/${
           width > 0 ? width : 'auto'
-        }x${height > 0 ? height : 'auto'}${src?.slice(src?.lastIndexOf('/'))}`;
+        }x${height > 0 ? height : 'auto'}${realSrc?.slice(
+          realSrc?.lastIndexOf('/'),
+        )}`;
       }
       return '';
     };

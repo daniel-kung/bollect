@@ -109,6 +109,7 @@ export const useCacheMetaData = (accountKey: string, artAddress: string) => {
       cacheData({
         ownerPublic: artAddress,
         accountInfo: tarItem,
+
         tokenInfo: undefined,
         metaData: fetchData,
       });

@@ -1,2 +1,2 @@
 export * from './BuyNFT';
-export * from './BuyItemNft';
+export * from './ShowNftDetail';

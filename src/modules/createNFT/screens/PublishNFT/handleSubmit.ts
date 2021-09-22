@@ -65,7 +65,6 @@ export const usePutOnSaleBidSubmit = () => {
       quantity: +payload.quantity,
       saleTime: payload.saleTimeEA,
     };
-    console.log('---handleSubmit---', params);
 
     const winnerLimit = new WinnerLimit({
       type: WinnerLimitType.Capped,
