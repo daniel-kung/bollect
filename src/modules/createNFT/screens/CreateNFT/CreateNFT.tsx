@@ -312,6 +312,7 @@ export const CreateNFT = () => {
               />
             </Box>
           }
+          {false && renderCollection}
           <Box>
             <Button size="large" type="submit" fullWidth loading={loading}>
               {loading ? t('common.submitting') : t('create-nft.submit')}

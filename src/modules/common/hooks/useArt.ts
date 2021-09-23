@@ -141,8 +141,7 @@ export const useCachedImage = (uri: string, cacheMesh?: boolean) => {
 };
 
 export const useArt = (key?: StringPublicKey, artAdress?: StringPublicKey) => {
-  const { metadata, editions, masterEditions, whitelistedCreatorsByCreator } =
-    useMeta();
+  const { editions } = useMeta();
   const connection = useConnection();
   const storeWhiteCreators = useSelector(
     (state: RootState) => state.user.storeWhiteCreators,
@@ -150,11 +149,6 @@ export const useArt = (key?: StringPublicKey, artAdress?: StringPublicKey) => {
     pre[c.address] = c.account;
     return pre;
   }, {});
-
-  // const account = useMemo(
-  //   () => metadata.find(a => a.pubkey === key),
-  //   [key, metadata],
-  // );
 
   const [masterEdition, setMasterEdition] = useState<{
     masterEditionAccountData: MasterEditionV1 | MasterEditionV2;
@@ -176,12 +170,12 @@ export const useArt = (key?: StringPublicKey, artAdress?: StringPublicKey) => {
       }
     };
     initData();
-  }, []);
+  }, [connection, key]);
 
   const art = useMemo(
     () =>
       metadataToArt(accountInfo, editions, storeWhiteCreators, masterEdition),
-    [accountInfo, editions, masterEdition, whitelistedCreatorsByCreator],
+    [accountInfo, editions, masterEdition, storeWhiteCreators],
   );
 
   return art;
@@ -195,9 +189,9 @@ const routeCDN = (uri: string) => {
       'https://arweave.net/',
       'https://coldcdn.com/api/cdn/bronil/',
     );
+    return result;
   }
 
-  // return result;
   return {
     creators: [
       {

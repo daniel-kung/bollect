@@ -1,5 +1,5 @@
 import { Box, Container, Tooltip, Typography } from '@material-ui/core';
-import { Mutation, useDispatchRequest } from '@redux-requests/react';
+import { Mutation } from '@redux-requests/react';
 import createDecorator from 'final-form-calculate';
 import { NftType } from 'modules/api/common/NftType';
 import { InputField } from 'modules/form/components/InputField';
@@ -12,13 +12,8 @@ import { Button } from 'modules/uiKit/Button';
 import { Section } from 'modules/uiKit/Section';
 import React, { useCallback, useMemo } from 'react';
 import { Field, Form, FormRenderProps } from 'react-final-form';
-import { useHistory } from 'react-router';
 import { ReactComponent as QuestionIcon } from '../../../common/assets/question.svg';
 import { Bytes, convertBytesToMegabytes } from '../../../common/types/unit';
-import {
-  ProfileRoutesConfig,
-  ProfileTab,
-} from '../../../profile/ProfileRoutes';
 import { createBrand } from '../../actions/createBrand';
 
 export interface ICreateBrandValues {
@@ -84,9 +79,6 @@ const validateCreateBrand = (payload: ICreateBrandValues) => {
 };
 
 export const CreateBrand = () => {
-  const dispatch = useDispatchRequest();
-  const { replace } = useHistory();
-
   const standardOptions = useMemo(
     () => [
       {
@@ -101,24 +93,21 @@ export const CreateBrand = () => {
     [],
   );
 
-  const handleSubmit = useCallback(
-    (payload: ICreateBrandValues) => {
-      // dispatch(createBrand(payload)).then(({ error }) => {
-      //   if (!error) {
-      //     replace(
-      //       ProfileRoutesConfig.UserProfile.generatePath(
-      //         ProfileTab.collections,
-      //       ),
-      //     );
-      //   }
-      // });
+  const handleSubmit = useCallback((payload: ICreateBrandValues) => {
+    // dispatch(createBrand(payload)).then(({ error }) => {
+    //   if (!error) {
+    //     replace(
+    //       ProfileRoutesConfig.UserProfile.generatePath(
+    //         ProfileTab.collections,
+    //       ),
+    //     );
+    //   }
+    // });
 
-      // HM 在这里创建 Collection
+    // HM 在这里创建 Collection
 
-      alert('创建 Collection');
-    },
-    [dispatch, replace],
-  );
+    alert('创建 Collection');
+  }, []);
 
   const renderForm = ({
     handleSubmit,
