@@ -10,7 +10,6 @@ import { Img } from 'modules/uiKit/Img';
 import { uid } from 'react-uid';
 import { CSSProperties } from 'react';
 import { BuyNFTRoutesConfig } from 'modules/buyNFT/BuyNFTRoutes';
-import { cacheData } from '../../cacheData';
 
 const styles: { [className in string]: CSSProperties } = {
   root: {
@@ -42,15 +41,6 @@ export const ItemCard: React.FC<{ item: IMyMintItem; artAddress: string }> = ({
 }) => {
   const classes = useProductCardStyles();
   const { data } = useExtendedArt(item.uri);
-
-  // 组装数据进行缓存
-  if (artAddress) {
-    cacheData({
-      ownerPublic: artAddress,
-      accountInfo: item,
-      metaData: data,
-    });
-  }
 
   return (
     <div style={styles.root}>

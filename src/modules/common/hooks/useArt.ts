@@ -192,26 +192,7 @@ const routeCDN = (uri: string) => {
     return result;
   }
 
-  return {
-    creators: [
-      {
-        address: 'AhNbarZ7LBjJayxWtvsygAXz78iMsbXrBxe1c3pTHKDs',
-        image: '',
-        link: '',
-        name: '',
-        share: 100,
-        verified: 1,
-      },
-    ],
-    edition: undefined,
-    maxSupply: 100,
-    mint: '9fqxYdkMo6jfJU5GWuyEtrcxi9qoy4TfWArFYgTEG9YM',
-    seller_fee_basis_points: 1500,
-    supply: 3,
-    title: 'HOMIE_XU',
-    type: 0,
-    uri: 'https://arweave.net/e_D4D2JZiqlCPALXv6YdwZl8hxjbgsqJuIEVUx6NqL0',
-  };
+  return result;
 };
 
 export const useExtendedArt = (uri: string) => {
