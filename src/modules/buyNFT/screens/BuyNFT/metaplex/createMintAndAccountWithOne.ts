@@ -7,7 +7,7 @@ import {
   programIds,
   StringPublicKey,
   toPublicKey,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 
 export async function createMintAndAccountWithOne(

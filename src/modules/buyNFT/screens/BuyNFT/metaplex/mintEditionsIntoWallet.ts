@@ -11,7 +11,7 @@ import {
   SequenceType,
   StringPublicKey,
   TokenAccount,
-} from '@oyster/common';
+} from 'npms/oystoer';
 import { setupMintEditionIntoWalletInstructions } from './setupMintEditionIntoWalletInstructions';
 import { Art } from './types';
 import { WalletContextState } from '@solana/wallet-adapter-react';
