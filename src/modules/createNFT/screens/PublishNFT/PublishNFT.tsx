@@ -172,6 +172,7 @@ export const PublishNFTComponent = ({
 
         const holding = await getAccountTokenSpl(getInfoParam);
         console.log('holding---------->', holding);
+        console.log('masterEdition---------->', masterEdition);
         if (
           payload.type === AuctionType.EnglishAuction &&
           metadataAccount?.data &&

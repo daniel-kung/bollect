@@ -2,6 +2,8 @@ import {
   decodeMasterEdition,
   decodeMetadata,
   ENDPOINTS,
+  MetadataKey,
+  METADATA_PROGRAM_ID,
   METAPLEX_ID,
   ParsedAccount,
 } from 'npms/oystoer';
@@ -80,6 +82,34 @@ export const accountGetMasterEditionInfo = async ({
       }
     }
   }
+};
+
+export const accountGetEditionInfo = async ({
+  parentPubkey,
+  connection,
+}: {
+  parentPubkey: string;
+  connection: Connection;
+}) => {
+  const res = await getProgramAccounts(connection, METADATA_PROGRAM_ID, {
+    filters: [
+      // {
+      //   memcmp: {
+      //     offset: 0,
+      //     bytes: bs58.encode(
+      //       Buffer.from(MetadataKey.EditionV1.toString(), 'utf8'),
+      //     ),
+      //   },
+      // },
+      {
+        memcmp: {
+          offset: 1,
+          bytes: parentPubkey,
+        },
+      },
+    ],
+  });
+  return res?.filter(e => e.account.data[0] === MetadataKey.EditionV1);
 };
 
 export const getCreators = async ({

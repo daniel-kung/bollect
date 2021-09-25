@@ -1,4 +1,5 @@
 import {
+  decodeEdition,
   decodeMetadata,
   MAX_CREATOR_LEN,
   MAX_NAME_LENGTH,
@@ -11,6 +12,7 @@ import { getProgramAccounts } from 'contexts/meta/loadAccounts';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { isMetadataV1Account } from 'contexts/meta/processMetaData';
+import { accountGetEditionInfo } from 'modules/common/utils/solanaAccount';
 
 const offset =
   1 + // key
@@ -43,6 +45,16 @@ export const useMintMetaData = (address: string) => {
     const init = async () => {
       if (address) {
         setLoading(true);
+        // TODO TEST
+        const testEdition = await accountGetEditionInfo({
+          connection,
+          parentPubkey: '9tQbgz8LVZ5DBxRtiW9wfKTZnDiNSUAR2kaDdkZB8pc4',
+        });
+        console.log('testEdition------>', testEdition);
+        console.log(
+          'testEdition------>',
+          decodeEdition(testEdition[0].account.data),
+        );
         const data = await getProgramAccounts(connection, METADATA_PROGRAM_ID, {
           filters: [
             {
